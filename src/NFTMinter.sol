@@ -9,38 +9,20 @@ import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
 contract Ticket is ERC721, ERC721URIStorage, Ownable {
     uint256 private _nextTokenId;
 
-    constructor(address initialOwner)
-        ERC721("Ticket", "ETk")
-        Ownable(initialOwner)
-    {}
+    constructor(address initialOwner) ERC721("Ticket", "ETk") Ownable(initialOwner) {}
 
-    function safeMint(address to, string memory uri)
-        public
-        onlyOwner
-        returns (uint256)
-    {
+    function safeMint(address to, string memory uri) public onlyOwner returns (uint256) {
         uint256 tokenId = _nextTokenId++;
         _safeMint(to, tokenId);
         _setTokenURI(tokenId, uri);
         return tokenId;
     }
 
-
-    function tokenURI(uint256 tokenId)
-        public
-        view
-        override(ERC721, ERC721URIStorage)
-        returns (string memory)
-    {
+    function tokenURI(uint256 tokenId) public view override(ERC721, ERC721URIStorage) returns (string memory) {
         return super.tokenURI(tokenId);
     }
 
-    function supportsInterface(bytes4 interfaceId)
-        public
-        view
-        override(ERC721, ERC721URIStorage)
-        returns (bool)
-    {
+    function supportsInterface(bytes4 interfaceId) public view override(ERC721, ERC721URIStorage) returns (bool) {
         return super.supportsInterface(interfaceId);
     }
 }
