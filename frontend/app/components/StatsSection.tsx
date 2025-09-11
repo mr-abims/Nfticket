@@ -1,17 +1,17 @@
 export function StatsSection() {
   const stats = [
     {
-      number: "10,000+",
+      number: "5,000+",
       label: "Events Created",
       description: "Successful events hosted on our platform"
     },
     {
-      number: "500K+",
+      number: "200K+",
       label: "Tickets Sold",
       description: "Secure blockchain-verified tickets"
     },
     {
-      number: "50K+",
+      number: "35K+",
       label: "Active Users",
       description: "Community members worldwide"
     },
@@ -23,15 +23,15 @@ export function StatsSection() {
   ]
 
   return (
-    <section className="py-24 bg-gradient-to-r from-blue-600 to-purple-600">
+    <section className="py-24 bg-primary-gradient">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
           <h2 className="text-3xl sm:text-4xl font-bold text-white mb-4">
             Trusted by the Community
           </h2>
-          <p className="text-xl text-blue-100 max-w-2xl mx-auto">
+          <p className="text-xl text-white/90 max-w-2xl mx-auto">
             Join thousands of event organizers and attendees who have chosen 
-            NFTicket for their blockchain-powered events.
+            Ticketify for their blockchain-powered events.
           </p>
         </div>
 
@@ -42,10 +42,10 @@ export function StatsSection() {
                 <div className="text-4xl sm:text-5xl font-bold text-white mb-2">
                   {stat.number}
                 </div>
-                <div className="text-xl font-semibold text-blue-100 mb-2">
+                <div className="text-xl font-semibold text-white/90 mb-2">
                   {stat.label}
                 </div>
-                <div className="text-blue-200 text-sm">
+                <div className="text-white/80 text-sm">
                   {stat.description}
                 </div>
               </div>
@@ -55,19 +55,19 @@ export function StatsSection() {
 
         {/* Additional trust indicators */}
         <div className="mt-16 text-center">
-          <p className="text-blue-100 mb-8">Secured by leading blockchain networks</p>
+          <p className="text-white/90 mb-8">Secured by leading blockchain protocols</p>
           <div className="flex justify-center items-center space-x-8 opacity-70">
             <div className="bg-white/10 backdrop-blur-sm rounded-lg px-6 py-3 border border-white/20">
               <span className="text-white font-semibold">Ethereum</span>
             </div>
             <div className="bg-white/10 backdrop-blur-sm rounded-lg px-6 py-3 border border-white/20">
-              <span className="text-white font-semibold">Polygon</span>
+              <span className="text-white font-semibold">Somnia</span>
             </div>
             <div className="bg-white/10 backdrop-blur-sm rounded-lg px-6 py-3 border border-white/20">
-              <span className="text-white font-semibold">Arbitrum</span>
+              <span className="text-white font-semibold">IPFS</span>
             </div>
             <div className="bg-white/10 backdrop-blur-sm rounded-lg px-6 py-3 border border-white/20">
-              <span className="text-white font-semibold">Optimism</span>
+              <span className="text-white font-semibold">ZKVerify</span>
             </div>
           </div>
         </div>

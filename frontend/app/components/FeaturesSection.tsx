@@ -8,7 +8,7 @@ export function FeaturesSection() {
       ),
       title: "Fraud-Proof Tickets",
       description: "Every ticket is an NFT on the blockchain, making counterfeiting impossible and ensuring authentic ownership.",
-      color: "blue"
+      color: "black"
     },
     {
       icon: (
@@ -64,24 +64,24 @@ export function FeaturesSection() {
 
   const getColorClasses = (color: string) => {
     const colorMap: Record<string, { bg: string; text: string; border: string }> = {
-      blue: { bg: "bg-blue-50 dark:bg-blue-900/20", text: "text-blue-600 dark:text-blue-400", border: "border-blue-200 dark:border-blue-800" },
-      purple: { bg: "bg-purple-50 dark:bg-purple-900/20", text: "text-purple-600 dark:text-purple-400", border: "border-purple-200 dark:border-purple-800" },
-      green: { bg: "bg-green-50 dark:bg-green-900/20", text: "text-green-600 dark:text-green-400", border: "border-green-200 dark:border-green-800" },
-      indigo: { bg: "bg-indigo-50 dark:bg-indigo-900/20", text: "text-indigo-600 dark:text-indigo-400", border: "border-indigo-200 dark:border-indigo-800" },
-      pink: { bg: "bg-pink-50 dark:bg-pink-900/20", text: "text-pink-600 dark:text-pink-400", border: "border-pink-200 dark:border-pink-800" },
-      red: { bg: "bg-red-50 dark:bg-red-900/20", text: "text-red-600 dark:text-red-400", border: "border-red-200 dark:border-red-800" }
+      black: { bg: "bg-white/10", text: "text-white", border: "border-white/20" },
+      purple: { bg: "bg-purple-500/20", text: "text-purple-400", border: "border-purple-500/30" },
+      green: { bg: "bg-green-500/20", text: "text-green-400", border: "border-green-500/30" },
+      indigo: { bg: "bg-indigo-500/20", text: "text-indigo-400", border: "border-indigo-500/30" },
+      pink: { bg: "bg-pink-500/20", text: "text-pink-400", border: "border-pink-500/30" },
+      red: { bg: "bg-red-500/20", text: "text-red-400", border: "border-red-500/30" }
     }
-    return colorMap[color] || colorMap.blue
+    return colorMap[color] || colorMap.black
   }
 
   return (
-    <section className="py-24 bg-white dark:bg-slate-900">
+    <section className="py-24 bg-black">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
-          <h2 className="text-3xl sm:text-4xl font-bold text-slate-900 dark:text-white mb-4">
-            Why Choose NFTicket?
+          <h2 className="text-3xl sm:text-4xl font-bold text-white mb-4">
+            Why Choose Ticketify?
           </h2>
-          <p className="text-xl text-slate-600 dark:text-slate-300 max-w-3xl mx-auto">
+          <p className="text-xl text-gray-300 max-w-3xl mx-auto">
             Experience the next generation of event management with blockchain technology, 
             smart contracts, and decentralized infrastructure.
           </p>
@@ -98,10 +98,10 @@ export function FeaturesSection() {
                 <div className={`w-16 h-16 ${colors.bg} rounded-xl flex items-center justify-center mb-6 ${colors.text}`}>
                   {feature.icon}
                 </div>
-                <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-4">
+                <h3 className="text-xl font-bold text-white mb-4">
                   {feature.title}
                 </h3>
-                <p className="text-slate-600 dark:text-slate-300 leading-relaxed">
+                <p className="text-gray-300 leading-relaxed">
                   {feature.description}
                 </p>
               </div>

@@ -1,6 +1,6 @@
-# NFTicket - Decentralized Event Management System
+# Ticketify - Decentralized Event Management System
 
-A modern, blockchain-powered event management platform built with Next.js 15, TypeScript, and Tailwind CSS. NFTicket enables users to create, discover, and attend events with complete transparency and security through blockchain technology.
+A modern, blockchain-powered event management platform built with Next.js 15, TypeScript, and Tailwind CSS. Ticketify enables users to create, discover, and attend events with complete transparency and security through blockchain technology.
 
 ## 🚀 Features
 
@@ -83,7 +83,7 @@ frontend/
 1. **Clone the repository**
    ```bash
    git clone <repository-url>
-   cd nfticket/frontend
+   cd Ticketify/frontend
    ```
 
 2. **Install dependencies**
@@ -102,10 +102,10 @@ frontend/
 ### Available Scripts
 
 ```bash
-# Development server with Turbopack
+# Development server
 npm run dev
 
-# Production build with Turbopack
+# Production build
 npm run build
 
 # Start production server
@@ -185,7 +185,7 @@ The application is prepared for Web3 integration with:
 - Transfer functionality
 
 ### Wallet Integration
-- MetaMask, WalletConnect, Coinbase Wallet support
+- MetaMask, WalletConnect
 - Network switching capabilities
 - Balance checking and transaction handling
 - Gas estimation and optimization
@@ -193,8 +193,6 @@ The application is prepared for Web3 integration with:
 ## 🎯 Future Enhancements
 
 ### Phase 2 Features
-- [ ] Real blockchain integration with smart contracts
-- [ ] IPFS integration for decentralized storage
 - [ ] Advanced analytics and reporting
 - [ ] Secondary marketplace for ticket resales
 - [ ] Social features and event reviews
@@ -218,17 +216,6 @@ The application is prepared for Web3 integration with:
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-## 🙏 Acknowledgments
-
-- Next.js team for the amazing framework
-- Tailwind CSS for the utility-first approach
-- RainbowKit for Web3 wallet integration
-- Unsplash for placeholder images
-- The entire Web3 community for inspiration
-
-## 📞 Support
-
-For support, email support@nfticket.com or join our Discord community.
 
 ---
 
