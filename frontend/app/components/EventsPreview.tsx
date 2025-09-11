@@ -55,19 +55,19 @@ const mockEvents = [
 
 export function EventsPreview() {
   return (
-    <section className="py-24 bg-slate-50 dark:bg-slate-800">
+    <section className="py-24 bg-black">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
-          <h2 className="text-3xl sm:text-4xl font-bold text-slate-900 dark:text-white mb-4">
+          <h2 className="text-3xl sm:text-4xl font-bold text-white mb-4">
             Upcoming Events
           </h2>
-          <p className="text-xl text-slate-600 dark:text-slate-300 max-w-2xl mx-auto mb-8">
+          <p className="text-xl text-gray-300 max-w-2xl mx-auto mb-8">
             Discover amazing events happening around the world. From conferences to concerts, 
             find your next unforgettable experience.
           </p>
           <Link
             href="/events"
-            className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-lg hover:from-blue-700 hover:to-purple-700 transition-all duration-200 font-medium"
+            className="inline-flex items-center px-6 py-3 bg-primary-gradient text-white rounded-lg bg-primary-gradient-hover transition-all duration-200 font-medium"
           >
             View All Events
             <svg className="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -84,16 +84,16 @@ export function EventsPreview() {
 
         {/* Call to action */}
         <div className="text-center mt-16">
-          <div className="bg-white dark:bg-slate-900 rounded-2xl p-8 shadow-lg border border-slate-200 dark:border-slate-700">
-            <h3 className="text-2xl font-bold text-slate-900 dark:text-white mb-4">
+          <div className="bg-gray-900 rounded-2xl p-8 shadow-lg border border-gray-700">
+            <h3 className="text-2xl font-bold text-white mb-4">
               Ready to Create Your Own Event?
             </h3>
-            <p className="text-slate-600 dark:text-slate-300 mb-6">
-              Join thousands of event organizers who trust NFTicket for their blockchain-powered events.
+            <p className="text-gray-300 mb-6">
+              Join thousands of event organizers who trust Ticketify for their blockchain-powered events.
             </p>
             <Link
               href="/create-event"
-              className="inline-flex items-center px-8 py-4 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-xl hover:from-purple-700 hover:to-pink-700 transition-all duration-200 font-semibold text-lg shadow-lg hover:shadow-xl transform hover:-translate-y-1"
+              className="inline-flex items-center px-8 py-4 bg-primary-gradient text-white rounded-xl bg-primary-gradient-hover transition-all duration-200 font-semibold text-lg shadow-lg hover:shadow-xl transform hover:-translate-y-1"
             >
               Create Your Event
               <svg className="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">

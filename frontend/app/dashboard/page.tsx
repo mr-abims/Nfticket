@@ -128,24 +128,24 @@ export default function DashboardPage() {
         </div>
 
         {/* User Info Card */}
-        <div className="bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl p-8 mb-8 text-white">
+        <div className="bg-primary-gradient rounded-2xl p-8 mb-8 text-white">
           <div className="flex flex-col md:flex-row md:items-center md:justify-between">
             <div>
               <h2 className="text-2xl font-bold mb-2">Welcome back!</h2>
-              <p className="text-blue-100 mb-4">
+              <p className="text-white/90 mb-4">
                 Address: {shortenAddress(mockUserData.address)}
               </p>
               <div className="flex items-center space-x-6">
                 <div>
-                  <p className="text-blue-100 text-sm">Balance</p>
-                  <p className="text-2xl font-bold">{mockUserData.balance} ETH</p>
+                  <p className="text-white/90 text-sm">Balance</p>
+                  <p className="text-2xl font-bold">{mockUserData.balance} STT</p>
                 </div>
                 <div>
-                  <p className="text-blue-100 text-sm">Events Created</p>
+                  <p className="text-white/90 text-sm">Events Created</p>
                   <p className="text-2xl font-bold">{mockUserData.eventsCreated}</p>
                 </div>
                 <div>
-                  <p className="text-blue-100 text-sm">Tickets Owned</p>
+                  <p className="text-white/90 text-sm">Tickets Owned</p>
                   <p className="text-2xl font-bold">{mockUserData.ticketsOwned}</p>
                 </div>
               </div>
@@ -153,7 +153,7 @@ export default function DashboardPage() {
             <div className="mt-6 md:mt-0">
               <Link
                 href="/create-event"
-                className="inline-flex items-center px-6 py-3 bg-white text-blue-600 rounded-lg hover:bg-blue-50 transition-colors font-medium"
+                className="inline-flex items-center px-6 py-3 bg-white text-purple-600 rounded-lg hover:bg-purple-50 transition-colors font-medium"
               >
                 <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
@@ -174,7 +174,7 @@ export default function DashboardPage() {
                   onClick={() => setActiveTab(tab.id as any)}
                   className={`flex items-center space-x-2 px-3 py-2 rounded-lg transition-colors ${
                     activeTab === tab.id
-                      ? "bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400"
+                      ? "bg-black/10 dark:bg-black/30 text-black dark:text-white"
                       : "text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white"
                   }`}
                 >
@@ -195,7 +195,7 @@ export default function DashboardPage() {
                       <div>
                         <p className="text-sm text-slate-600 dark:text-slate-400">Total Revenue</p>
                         <p className="text-2xl font-bold text-slate-900 dark:text-white">
-                          {mockCreatedEvents.reduce((sum, event) => sum + parseFloat(event.revenue), 0).toFixed(2)} ETH
+                          {mockCreatedEvents.reduce((sum, event) => sum + parseFloat(event.revenue), 0).toFixed(2)} STT
                         </p>
                       </div>
                       <div className="w-12 h-12 bg-green-100 dark:bg-green-900/30 rounded-lg flex items-center justify-center">
@@ -214,8 +214,8 @@ export default function DashboardPage() {
                           {mockCreatedEvents.reduce((sum, event) => sum + event.ticketsSold, 0)}
                         </p>
                       </div>
-                      <div className="w-12 h-12 bg-blue-100 dark:bg-blue-900/30 rounded-lg flex items-center justify-center">
-                        <svg className="w-6 h-6 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <div className="w-12 h-12 bg-black/10 dark:bg-black/30 rounded-lg flex items-center justify-center">
+                        <svg className="w-6 h-6 text-purple-600 dark:text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 5v2m0 4v2m0 4v2M5 5a2 2 0 00-2 2v3a2 2 0 110 4v3a2 2 0 002 2h14a2 2 0 002-2v-3a2 2 0 110-4V7a2 2 0 00-2-2H5z" />
                         </svg>
                       </div>
@@ -267,19 +267,19 @@ export default function DashboardPage() {
                       </div>
                       <div className="flex-1">
                         <p className="text-slate-900 dark:text-white font-medium">Ticket sold for Web3 Developer Conference</p>
-                        <p className="text-sm text-slate-600 dark:text-slate-400">2 hours ago • +0.1 ETH</p>
+                        <p className="text-sm text-slate-600 dark:text-slate-400">2 hours ago • +0.1 STT</p>
                       </div>
                     </div>
 
                     <div className="flex items-center space-x-4 p-4 bg-slate-50 dark:bg-slate-800 rounded-lg">
-                      <div className="w-10 h-10 bg-blue-100 dark:bg-blue-900/30 rounded-lg flex items-center justify-center">
-                        <svg className="w-5 h-5 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <div className="w-10 h-10 bg-black/10 dark:bg-black/30 rounded-lg flex items-center justify-center">
+                        <svg className="w-5 h-5 text-purple-600 dark:text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 5v2m0 4v2m0 4v2M5 5a2 2 0 00-2 2v3a2 2 0 110 4v3a2 2 0 002 2h14a2 2 0 002-2v-3a2 2 0 110-4V7a2 2 0 00-2-2H5z" />
                         </svg>
                       </div>
                       <div className="flex-1">
                         <p className="text-slate-900 dark:text-white font-medium">Purchased ticket for Blockchain Music Festival</p>
-                        <p className="text-sm text-slate-600 dark:text-slate-400">1 day ago • -0.25 ETH</p>
+                        <p className="text-sm text-slate-600 dark:text-slate-400">1 day ago • -0.25 STT</p>
                       </div>
                     </div>
 
@@ -306,7 +306,7 @@ export default function DashboardPage() {
                   <h3 className="text-xl font-bold text-slate-900 dark:text-white">My Events</h3>
                   <Link
                     href="/create-event"
-                    className="px-4 py-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-lg hover:from-blue-700 hover:to-purple-700 transition-all duration-200 font-medium"
+                    className="px-4 py-2 bg-primary-gradient text-white rounded-lg bg-primary-gradient-hover transition-all duration-200 font-medium"
                   >
                     Create New Event
                   </Link>
@@ -338,7 +338,7 @@ export default function DashboardPage() {
                             </span>
                             <Link
                               href={`/events/${event.id}`}
-                              className="text-blue-600 dark:text-blue-400 hover:underline text-sm"
+                              className="text-purple-600 dark:text-purple-400 hover:underline text-sm"
                             >
                               View Details
                             </Link>
@@ -354,7 +354,7 @@ export default function DashboardPage() {
                         </div>
                         <div>
                           <p className="text-sm text-slate-600 dark:text-slate-400">Revenue</p>
-                          <p className="font-semibold text-slate-900 dark:text-white">{event.revenue} ETH</p>
+                          <p className="font-semibold text-slate-900 dark:text-white">{event.revenue} STT</p>
                         </div>
                         <div>
                           <p className="text-sm text-slate-600 dark:text-slate-400">Rate</p>
@@ -409,7 +409,7 @@ export default function DashboardPage() {
                       <div className="mt-4 flex justify-between items-center">
                         <div>
                           <p className="text-sm text-slate-600 dark:text-slate-400">Purchase Price</p>
-                          <p className="font-semibold text-slate-900 dark:text-white">{ticket.purchasePrice} ETH</p>
+                          <p className="font-semibold text-slate-900 dark:text-white">{ticket.purchasePrice} STT</p>
                         </div>
                         <div className="text-right">
                           <p className="text-sm text-slate-600 dark:text-slate-400">Purchased</p>
@@ -419,7 +419,7 @@ export default function DashboardPage() {
                         </div>
                       </div>
                       {!ticket.isUsed && new Date(ticket.eventDate) > new Date() && (
-                        <button className="w-full mt-4 px-4 py-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-lg hover:from-blue-700 hover:to-purple-700 transition-all duration-200 font-medium">
+                        <button className="w-full mt-4 px-4 py-2 bg-primary-gradient text-white rounded-lg bg-primary-gradient-hover transition-all duration-200 font-medium">
                           Show QR Code
                         </button>
                       )}

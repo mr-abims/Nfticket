@@ -8,10 +8,10 @@ export function Footer() {
           {/* Company Info */}
           <div className="space-y-4">
             <Link href="/" className="flex items-center space-x-2">
-              <div className="w-8 h-8 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg flex items-center justify-center">
+              <div className="w-8 h-8 bg-primary-gradient rounded-lg flex items-center justify-center">
                 <span className="text-white font-bold text-sm">NT</span>
               </div>
-              <span className="text-xl font-bold">NFTicket</span>
+              <span className="text-xl font-bold">Ticketify</span>
             </Link>
             <p className="text-slate-300 text-sm leading-relaxed">
               The future of event management powered by blockchain technology. 
@@ -133,14 +133,14 @@ export function Footer() {
         {/* Bottom Bar */}
         <div className="border-t border-slate-700 mt-12 pt-8 flex flex-col md:flex-row justify-between items-center">
           <p className="text-slate-400 text-sm">
-            © 2024 NFTicket. All rights reserved.
+            © 2025 Ticketify. All rights reserved.
           </p>
           <div className="flex items-center space-x-6 mt-4 md:mt-0">
             <span className="text-slate-400 text-sm">Built on</span>
             <div className="flex items-center space-x-4">
-              <span className="text-slate-300 text-sm font-medium">Ethereum</span>
+              <span className="text-slate-300 text-sm font-medium">Somnia</span>
               <span className="text-slate-300 text-sm font-medium">IPFS</span>
-              <span className="text-slate-300 text-sm font-medium">The Graph</span>
+              <span className="text-slate-300 text-sm font-medium">ZKVerify</span>
             </div>
           </div>
         </div>

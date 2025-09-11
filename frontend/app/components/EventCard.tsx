@@ -12,7 +12,7 @@ export function EventCard({ event }: EventCardProps) {
 
   const getCategoryColor = (category: string) => {
     const colors: Record<string, string> = {
-      conference: "bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300",
+      conference: "bg-black/10 text-black dark:bg-black/30 dark:text-white",
       concert: "bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-300",
       workshop: "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300",
       meetup: "bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-300",
@@ -40,7 +40,7 @@ export function EventCard({ event }: EventCardProps) {
         </div>
         <div className="absolute top-4 right-4">
           <div className="bg-black/50 backdrop-blur-sm text-white px-3 py-1 rounded-full text-sm font-medium">
-            {event.ticketPrice} ETH
+            {event.ticketPrice} STT
           </div>
         </div>
       </div>
@@ -95,7 +95,7 @@ export function EventCard({ event }: EventCardProps) {
 
         <Link
           href={`/events/${event.id}`}
-          className="block w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white text-center py-3 rounded-xl hover:from-blue-700 hover:to-purple-700 transition-all duration-200 font-medium"
+          className="block w-full bg-primary-gradient text-white text-center py-3 rounded-xl bg-primary-gradient-hover transition-all duration-200 font-medium"
         >
           View Details
         </Link>

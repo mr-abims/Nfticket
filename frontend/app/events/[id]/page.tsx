@@ -57,7 +57,7 @@ export default function EventDetailPage() {
 
   const confirmPurchase = () => {
     // In a real app, this would interact with the smart contract
-    alert(`Purchasing ${ticketQuantity} ticket(s) for ${totalPrice} ETH`)
+    alert(`Purchasing ${ticketQuantity} ticket(s) for ${totalPrice} STT`)
     setShowPurchaseModal(false)
   }
 
@@ -90,7 +90,7 @@ export default function EventDetailPage() {
                 className="w-full h-64 sm:h-80 lg:h-96 object-cover"
               />
               <div className="absolute top-4 left-4">
-                <span className="px-3 py-1 bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300 rounded-full text-sm font-medium">
+                <span className="px-3 py-1 bg-black/10 text-black dark:bg-black/30 dark:text-white rounded-full text-sm font-medium">
                   {mockEvent.category.charAt(0).toUpperCase() + mockEvent.category.slice(1)}
                 </span>
               </div>
@@ -176,7 +176,7 @@ export default function EventDetailPage() {
               <div className="space-y-4">
                 {mockEvent.agenda.map((item, index) => (
                   <div key={index} className="flex items-start space-x-4 p-4 bg-slate-50 dark:bg-slate-800 rounded-lg">
-                    <div className="text-blue-600 dark:text-blue-400 font-mono text-sm font-medium min-w-[60px]">
+                    <div className="text-purple-600 dark:text-purple-400 font-mono text-sm font-medium min-w-[60px]">
                       {item.time}
                     </div>
                     <div className="text-slate-900 dark:text-white font-medium">
@@ -227,7 +227,7 @@ export default function EventDetailPage() {
                 <select
                   value={ticketQuantity}
                   onChange={(e) => setTicketQuantity(Number(e.target.value))}
-                  className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-slate-800 text-slate-900 dark:text-white"
+                  className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent bg-white dark:bg-slate-800 text-slate-900 dark:text-white"
                 >
                   {[...Array(Math.min(10, mockEvent.availableTickets))].map((_, i) => (
                     <option key={i + 1} value={i + 1}>
@@ -249,7 +249,7 @@ export default function EventDetailPage() {
               <button
                 onClick={handlePurchase}
                 disabled={mockEvent.availableTickets === 0}
-                className="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white py-4 rounded-xl hover:from-blue-700 hover:to-purple-700 transition-all duration-200 font-semibold text-lg disabled:opacity-50 disabled:cursor-not-allowed shadow-lg hover:shadow-xl transform hover:-translate-y-1"
+                className="w-full bg-primary-gradient text-white py-4 rounded-xl bg-primary-gradient-hover transition-all duration-200 font-semibold text-lg disabled:opacity-50 disabled:cursor-not-allowed shadow-lg hover:shadow-xl transform hover:-translate-y-1"
               >
                 {mockEvent.availableTickets === 0 ? "Sold Out" : "Purchase Tickets"}
               </button>
@@ -319,7 +319,7 @@ export default function EventDetailPage() {
               </button>
               <button
                 onClick={confirmPurchase}
-                className="flex-1 px-4 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-lg hover:from-blue-700 hover:to-purple-700 transition-all duration-200 font-medium"
+                className="flex-1 px-4 py-3 bg-primary-gradient text-white rounded-lg bg-primary-gradient-hover transition-all duration-200 font-medium"
               >
                 Confirm Purchase
               </button>

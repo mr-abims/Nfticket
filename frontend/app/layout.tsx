@@ -1,4 +1,6 @@
 import type { Metadata } from "next";
+import { Inter } from 'next/font/google';
+import { Providers } from './providers';
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 
@@ -13,21 +15,23 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "NFTicket - Decentralized Event Management",
+  title: "Ticketify - Decentralized Event Management",
   description: "Create, manage, and attend events on the blockchain. Secure, transparent, and decentralized event ticketing platform.",
 };
 
 export default function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode;
-}>) {
+}) {
   return (
     <html lang="en">
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
+        <Providers>
         {children}
+        </Providers>
       </body>
     </html>
   );
