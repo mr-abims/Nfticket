@@ -113,7 +113,7 @@ export default function CreateEventPage() {
                   <div
                     className={`w-10 h-10 rounded-full flex items-center justify-center font-semibold ${
                       step <= currentStep
-                        ? "bg-gradient-to-r from-blue-600 to-purple-600 text-white"
+                        ? "bg-primary-gradient text-white"
                         : "bg-slate-200 dark:bg-slate-700 text-slate-500 dark:text-slate-400"
                     }`}
                   >
@@ -133,7 +133,7 @@ export default function CreateEventPage() {
                   {step < 3 && (
                     <div className={`ml-8 w-16 h-0.5 ${
                       step < currentStep
-                        ? "bg-gradient-to-r from-blue-600 to-purple-600"
+                        ? "bg-primary-gradient"
                         : "bg-slate-200 dark:bg-slate-700"
                     }`} />
                   )}
@@ -162,7 +162,7 @@ export default function CreateEventPage() {
                       onChange={handleInputChange}
                       placeholder="Enter your event title"
                       required
-                      className="w-full px-4 py-3 border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-slate-800 text-slate-900 dark:text-white"
+                      className="w-full px-4 py-3 border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent bg-white dark:bg-slate-800 text-slate-900 dark:text-white"
                     />
                   </div>
 
@@ -190,7 +190,7 @@ export default function CreateEventPage() {
                       value={formData.category}
                       onChange={handleInputChange}
                       required
-                      className="w-full px-4 py-3 border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-slate-800 text-slate-900 dark:text-white"
+                      className="w-full px-4 py-3 border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent bg-white dark:bg-slate-800 text-slate-900 dark:text-white"
                     >
                       {categories.map(category => (
                         <option key={category.value} value={category.value}>
@@ -219,7 +219,7 @@ export default function CreateEventPage() {
                       value={formData.date}
                       onChange={handleInputChange}
                       required
-                      className="w-full px-4 py-3 border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-slate-800 text-slate-900 dark:text-white"
+                      className="w-full px-4 py-3 border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent bg-white dark:bg-slate-800 text-slate-900 dark:text-white"
                     />
                   </div>
 
@@ -234,7 +234,7 @@ export default function CreateEventPage() {
                       onChange={handleInputChange}
                       placeholder="Enter event location or 'Virtual Event'"
                       required
-                      className="w-full px-4 py-3 border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-slate-800 text-slate-900 dark:text-white"
+                      className="w-full px-4 py-3 border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent bg-white dark:bg-slate-800 text-slate-900 dark:text-white"
                     />
                   </div>
 
@@ -249,7 +249,7 @@ export default function CreateEventPage() {
                       onChange={handleInputChange}
                       placeholder="https://example.com/event-image.jpg"
                       required
-                      className="w-full px-4 py-3 border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-slate-800 text-slate-900 dark:text-white"
+                      className="w-full px-4 py-3 border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent bg-white dark:bg-slate-800 text-slate-900 dark:text-white"
                     />
                     <p className="text-sm text-slate-500 dark:text-slate-400 mt-2">
                       Upload your image to a service like IPFS or use a direct URL
@@ -285,7 +285,7 @@ export default function CreateEventPage() {
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
                       <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
-                        Ticket Price (ETH) *
+                        Ticket Price (STT) *
                       </label>
                       <input
                         type="number"
@@ -296,7 +296,7 @@ export default function CreateEventPage() {
                         step="0.001"
                         min="0"
                         required
-                        className="w-full px-4 py-3 border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-slate-800 text-slate-900 dark:text-white"
+                        className="w-full px-4 py-3 border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent bg-white dark:bg-slate-800 text-slate-900 dark:text-white"
                       />
                     </div>
 
@@ -312,7 +312,7 @@ export default function CreateEventPage() {
                         placeholder="100"
                         min="1"
                         required
-                        className="w-full px-4 py-3 border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-slate-800 text-slate-900 dark:text-white"
+                        className="w-full px-4 py-3 border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent bg-white dark:bg-slate-800 text-slate-900 dark:text-white"
                       />
                     </div>
                   </div>
@@ -345,7 +345,7 @@ export default function CreateEventPage() {
                       </div>
                       <div className="flex justify-between">
                         <span className="text-slate-600 dark:text-slate-400">Ticket Price:</span>
-                        <span className="text-slate-900 dark:text-white font-medium">{formData.ticketPrice} ETH</span>
+                        <span className="text-slate-900 dark:text-white font-medium">{formData.ticketPrice} STT</span>
                       </div>
                       <div className="flex justify-between">
                         <span className="text-slate-600 dark:text-slate-400">Total Tickets:</span>
@@ -355,7 +355,7 @@ export default function CreateEventPage() {
                         <div className="flex justify-between">
                           <span className="text-slate-600 dark:text-slate-400">Potential Revenue:</span>
                           <span className="text-slate-900 dark:text-white font-bold">
-                            {(formData.ticketPrice * formData.totalTickets).toFixed(4)} ETH
+                            {(formData.ticketPrice * formData.totalTickets).toFixed(4)} STT
                           </span>
                         </div>
                       </div>
@@ -380,7 +380,7 @@ export default function CreateEventPage() {
                     type="button"
                     onClick={nextStep}
                     disabled={!isStepValid(currentStep)}
-                    className="px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-lg hover:from-blue-700 hover:to-purple-700 transition-all duration-200 font-medium disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="px-6 py-3 bg-primary-gradient text-white rounded-lg bg-primary-gradient-hover transition-all duration-200 font-medium disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     Next
                   </button>
@@ -388,7 +388,7 @@ export default function CreateEventPage() {
                   <button
                     type="submit"
                     disabled={!isStepValid(currentStep) || isSubmitting}
-                    className="px-8 py-3 bg-gradient-to-r from-green-600 to-blue-600 text-white rounded-lg hover:from-green-700 hover:to-blue-700 transition-all duration-200 font-medium disabled:opacity-50 disabled:cursor-not-allowed flex items-center"
+                    className="px-8 py-3 bg-primary-gradient text-white rounded-lg bg-primary-gradient-hover transition-all duration-200 font-medium disabled:opacity-50 disabled:cursor-not-allowed flex items-center"
                   >
                     {isSubmitting ? (
                       <>

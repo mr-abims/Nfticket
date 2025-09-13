@@ -2,6 +2,7 @@
 
 import Link from "next/link"
 import { useState } from "react"
+import { ConnectButton } from '@rainbow-me/rainbowkit';
 
 export function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
@@ -12,11 +13,11 @@ export function Header() {
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
           <Link href="/" className="flex items-center space-x-2">
-            <div className="w-8 h-8 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg flex items-center justify-center">
-              <span className="text-white font-bold text-sm">NT</span>
+            <div className="w-8 h-8 bg-primary-gradient rounded-lg flex items-center justify-center">
+              <span className="text-white font-bold text-sm">TR</span>
             </div>
             <span className="text-xl font-bold text-slate-900 dark:text-white">
-              NFTicket
+              Ticketify
             </span>
           </Link>
 
@@ -44,9 +45,10 @@ export function Header() {
 
           {/* Connect Wallet Button */}
           <div className="flex items-center space-x-4">
-            <button className="hidden md:flex items-center px-4 py-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-lg hover:from-blue-700 hover:to-purple-700 transition-all duration-200 font-medium">
+            {/* <button className="hidden md:flex items-center px-4 py-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-lg hover:from-blue-700 hover:to-purple-700 transition-all duration-200 font-medium">
               Connect Wallet
-            </button>
+            </button> */}
+            <ConnectButton />
 
             {/* Mobile Menu Button */}
             <button
@@ -104,9 +106,10 @@ export function Header() {
               >
                 Dashboard
               </Link>
-              <button className="flex items-center justify-center px-4 py-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-lg hover:from-blue-700 hover:to-purple-700 transition-all duration-200 font-medium">
+              {/* <button className="flex items-center justify-center px-4 py-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-lg hover:from-blue-700 hover:to-purple-700 transition-all duration-200 font-medium">
                 Connect Wallet
-              </button>
+              </button> */}
+              <ConnectButton />
             </nav>
           </div>
         )}
