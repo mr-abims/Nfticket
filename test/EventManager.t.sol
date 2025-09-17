@@ -116,8 +116,6 @@ contract EventManagerTest is Test {
         // Check user created events
         EventManager[] memory userEvents = eventFactory.getUserCreatedEvents(owner);
         assertEq(userEvents.length, 2);
-
-        
     }
 
     function test_endEvent() public {

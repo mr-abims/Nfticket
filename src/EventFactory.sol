@@ -37,11 +37,7 @@ contract EventFactory is Ownable {
     );
 
     event TicketPurchased(
-        address indexed user,
-        address indexed eventContract,
-        uint256 tokenId,
-        string eventName,
-        uint256 purchaseTime
+        address indexed user, address indexed eventContract, uint256 tokenId, string eventName, uint256 purchaseTime
     );
 
     constructor() Ownable(msg.sender) {}
@@ -72,7 +68,7 @@ contract EventFactory is Ownable {
         // Mark event name as used and map to contract
         eventNameExists[_eventName] = true;
         eventNameToContract[_eventName] = eventAddress;
-        
+
         // Mark as valid event contract for ticket tracking
         isValidEventContract[eventAddress] = true;
 
@@ -166,24 +162,20 @@ contract EventFactory is Ownable {
     }
 
     // Global ticket tracking functions
-    function recordTicketPurchase(
-        address user, 
-        uint256 tokenId, 
-        string memory eventName
-    ) external {
+    function recordTicketPurchase(address user, uint256 tokenId, string memory eventName) external {
         require(isValidEventContract[msg.sender], "Only valid event contracts can call this");
-        
+
         UserTicket memory newTicket = UserTicket({
             eventContract: msg.sender,
             tokenId: tokenId,
             purchaseTime: block.timestamp,
             eventName: eventName
         });
-        
+
         userAllTickets[user].push(newTicket);
         userTicketCount[user]++;
         userTicketsByEvent[user][msg.sender].push(tokenId);
-        
+
         emit TicketPurchased(user, msg.sender, tokenId, eventName, block.timestamp);
     }
 
