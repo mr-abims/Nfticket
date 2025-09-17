@@ -5,8 +5,13 @@ import {ERC721} from "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import {ERC721URIStorage} from "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
 import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
 
+interface IEventFactory {
+    function recordTicketPurchase(address user, uint256 tokenId, string memory eventName) external;
+}
+
 contract EventManager is ERC721, ERC721URIStorage, Ownable {
     address public eventOwner;
+    address public factory;
     string public eventName;
     uint256 public regStartTime;
     uint256 public regEndTime;
@@ -33,6 +38,7 @@ contract EventManager is ERC721, ERC721URIStorage, Ownable {
         address _eventOwner
     ) ERC721(_eventName, _eventAcronym) Ownable(_eventOwner) {
         eventOwner = _eventOwner;
+        factory = msg.sender; // Factory is the creator of this contract
 
         require(_regStartTime >= block.timestamp, "Start time must be in the future");
         require(_regEndTime > _regStartTime, "End time must be after start time");
@@ -97,6 +103,9 @@ contract EventManager is ERC721, ERC721URIStorage, Ownable {
         _safeMint(msg.sender, tokenId);
         _setTokenURI(tokenId, ticketURI);
         userTickets[msg.sender].push(tokenId);
+
+        // Report ticket purchase to factory for global tracking
+        IEventFactory(factory).recordTicketPurchase(msg.sender, tokenId, eventName);
 
         emit UserRegistered(msg.sender, eventName, tokenId);
     }

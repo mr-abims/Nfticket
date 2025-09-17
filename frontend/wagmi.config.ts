@@ -1,30 +1,30 @@
 import { getDefaultConfig } from '@rainbow-me/rainbowkit';
-import { mainnet, sepolia } from 'wagmi/chains';
+import { mainnet } from 'wagmi/chains';
 import { createConfig } from 'wagmi';
 import { http } from 'viem';
 
-// Define Somnia chain configuration
-const somnia = {
+// Define Somnia Testnet chain configuration
+const somniaTestnet = {
   id: 50312,
-  name: 'Somnia',
-  network: 'somnia',
+  name: 'Somnia Testnet',
+  network: 'somnia-testnet',
   nativeCurrency: {
     decimals: 18,
-    name: 'Somnia',
+    name: 'Somnia Test Token',
     symbol: 'STT',
   },
   rpcUrls: {
-    public: { http: ['https://dream-rpc.somnia.network/'] },
-    default: { http: ['https://dream-rpc.somnia.network/'] },
+    public: { http: ['https://dream-rpc.somnia.network'] },
+    default: { http: ['https://dream-rpc.somnia.network'] },
   },
   blockExplorers: {
-    default: { name: 'Somnia Explorer', url: 'https://shannon-explorer.somnia.network/' },
+    default: { name: 'Somnia Testnet Explorer', url: 'https://somnia-testnet.socialscan.io' },
   },
 } as const;
 
 export const config = getDefaultConfig({
   appName: 'Ticketify',
   projectId: process.env.PROJECT_ID || 'default-project-id',
-  chains: [mainnet, sepolia, somnia],
+  chains: [mainnet, somniaTestnet],
   ssr: true,
 });

@@ -1,10 +1,14 @@
 'use client'
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Header } from "../components/Header"
 import { Footer } from "../components/Footer"
 import { EventCard } from "../components/EventCard"
-import { EventFilters } from "../types/event"
+import { ErrorBoundary, LoadingSpinner, ErrorMessage } from "../components/ErrorBoundary"
+import { NetworkCheck } from "../components/NetworkCheck"
+import { EventFilters, Event } from "../types/event"
+import { useGetAllEvents, useGetEventInfo } from "../hooks/useContracts"
+import { areContractsConfigured } from "../contracts/config"
 
 // Mock data - in a real app, this would come from the blockchain/API
 const mockEvents = [
@@ -106,10 +110,152 @@ const mockEvents = [
   }
 ]
 
+// Hook to fetch event data from a single event contract
+const useEventData = (eventAddress: `0x${string}`) => {
+  const { eventInfo, isLoading, error } = useGetEventInfo(eventAddress)
+
+  const [eventData, setEventData] = useState<Event | null>(null)
+  const [isLoadingMetadata, setIsLoadingMetadata] = useState(false)
+
+  useEffect(() => {
+    const fetchEventMetadata = async () => {
+      if (eventInfo && eventAddress) {
+        setIsLoadingMetadata(true)
+        
+        try {
+          // Transform blockchain data to Event format
+          const [
+            eventName,
+            regStartTime,
+            regEndTime,
+            ticketFee,
+            ticketFeeRequired,
+            maxTickets,
+            ticketsSold,
+            ticketURI,
+            eventEnded
+          ] = eventInfo
+
+          let metadata = null
+          let imageUrl = "https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=400&h=300&fit=crop"
+          let description = "Blockchain event - Click to view full details and purchase tickets."
+          let location = "View Details"
+          let category = "other" as const
+
+          // Fetch metadata from IPFS if ticketURI exists
+          if (ticketURI && ticketURI.startsWith('https://')) {
+            try {
+              console.log('Fetching metadata from:', ticketURI)
+              const response = await fetch(ticketURI)
+              if (response.ok) {
+                metadata = await response.json()
+                console.log('Fetched metadata:', metadata)
+                
+                // Extract data from metadata
+                if (metadata.image) {
+                  imageUrl = metadata.image
+                }
+                if (metadata.description) {
+                  description = metadata.description
+                }
+                
+                // Try to extract location and category from attributes
+                if (metadata.attributes) {
+                  const locationAttr = metadata.attributes.find((attr: any) => attr.trait_type === "Location")
+                  const categoryAttr = metadata.attributes.find((attr: any) => attr.trait_type === "Category")
+                  
+                  if (locationAttr?.value) {
+                    location = locationAttr.value
+                  }
+                  if (categoryAttr?.value) {
+                    category = categoryAttr.value.toLowerCase()
+                  }
+                }
+              }
+            } catch (metadataError) {
+              console.error('Error fetching metadata:', metadataError)
+              // Continue with default values
+            }
+          }
+
+          const event: Event = {
+            id: eventAddress,
+            title: eventName,
+            description,
+            imageUrl,
+            date: new Date(Number(regEndTime) * 1000).toISOString(),
+            location,
+            category,
+            ticketPrice: Number(ticketFee) / 1e18, // Convert from wei to STT
+            totalTickets: Number(maxTickets),
+            availableTickets: Number(maxTickets) - Number(ticketsSold),
+            organizer: "0x...",
+            contractAddress: eventAddress,
+            isActive: !eventEnded && Date.now() < Number(regEndTime) * 1000,
+            createdAt: new Date(Number(regStartTime) * 1000).toISOString(),
+          }
+
+          setEventData(event)
+        } catch (error) {
+          console.error('Error processing event data:', error)
+        } finally {
+          setIsLoadingMetadata(false)
+        }
+      }
+    }
+
+    fetchEventMetadata()
+  }, [eventInfo, eventAddress])
+
+  return { eventData, isLoading: isLoading || isLoadingMetadata, error }
+}
+
+// Component to render a single blockchain event with real data
+const BlockchainEventCard = ({ eventAddress }: { eventAddress: `0x${string}` }) => {
+  const { eventData, isLoading, error } = useEventData(eventAddress)
+
+  if (isLoading) {
+    return (
+      <div className="bg-white dark:bg-slate-900 rounded-2xl p-6 shadow-lg border border-slate-200 dark:border-slate-700 animate-pulse">
+        <div className="w-full h-48 bg-slate-200 dark:bg-slate-700 rounded-lg mb-4"></div>
+        <div className="h-6 bg-slate-200 dark:bg-slate-700 rounded mb-2"></div>
+        <div className="h-4 bg-slate-200 dark:bg-slate-700 rounded w-3/4 mb-4"></div>
+        <div className="h-4 bg-slate-200 dark:bg-slate-700 rounded w-1/2"></div>
+      </div>
+    )
+  }
+
+  if (error || !eventData) {
+    return (
+      <div className="bg-white dark:bg-slate-900 rounded-2xl p-6 shadow-lg border border-slate-200 dark:border-slate-700">
+        <div className="text-center py-8">
+          <svg className="w-12 h-12 text-slate-400 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z" />
+          </svg>
+          <p className="text-slate-600 dark:text-slate-300 text-sm">
+            Error loading event
+          </p>
+          <p className="text-slate-500 dark:text-slate-400 text-xs mt-1">
+            {eventAddress.slice(0, 10)}...
+          </p>
+        </div>
+      </div>
+    )
+  }
+
+  return <EventCard event={eventData} />
+}
+
 export default function EventsPage() {
   const [searchQuery, setSearchQuery] = useState("")
   const [selectedCategory, setSelectedCategory] = useState<string>("all")
   const [sortBy, setSortBy] = useState<string>("date")
+
+  // Get all events from the factory
+  const { events: eventAddresses, isLoading: isLoadingAddresses, error: addressError, refetch } = useGetAllEvents()
+
+  // Determine if we should use blockchain data or mock data
+  const useBlockchainData = areContractsConfigured() && !addressError
 
   const categories = [
     { value: "all", label: "All Categories" },
@@ -129,8 +275,9 @@ export default function EventsPage() {
     { value: "availability", label: "Availability" }
   ]
 
-  // Filter and sort events
-  const filteredEvents = mockEvents
+  // For blockchain events, we can't filter/sort until data is loaded
+  // For mock events, we can filter and sort normally
+  const filteredEvents = useBlockchainData ? [] : mockEvents
     .filter(event => {
       const matchesSearch = event.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
                            event.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -151,11 +298,47 @@ export default function EventsPage() {
       }
     })
 
+  // Filter blockchain event addresses based on search (basic filtering by address)
+  const filteredEventAddresses = useBlockchainData && eventAddresses ? 
+    eventAddresses.filter(address => 
+      searchQuery === "" || address.toLowerCase().includes(searchQuery.toLowerCase())
+    ) : []
+
+  const isLoading = isLoadingAddresses
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-800">
-      <Header />
-      
-      <main className="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <ErrorBoundary>
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-800">
+        <Header />
+        
+        <main className="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
+          {/* Network Check */}
+          <div className="max-w-6xl mx-auto mb-6">
+            <NetworkCheck />
+          </div>
+
+          {/* Data Source Indicator */}
+          {!useBlockchainData && (
+            <div className="max-w-6xl mx-auto mb-6">
+              <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4">
+                <div className="flex items-center">
+                  <svg className="w-5 h-5 text-blue-600 dark:text-blue-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                  <p className="text-sm text-blue-700 dark:text-blue-300">
+                    Showing demo data. Connect to Somnia Testnet to see live events.
+                  </p>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Error Display */}
+          {addressError && (
+            <div className="max-w-6xl mx-auto mb-6">
+              <ErrorMessage error={addressError} onRetry={refetch} />
+            </div>
+          )}
         {/* Page Header */}
         <div className="text-center mb-12">
           <h1 className="text-4xl font-bold text-slate-900 dark:text-white mb-4">
@@ -221,7 +404,10 @@ export default function EventsPage() {
         {/* Results Info */}
         <div className="flex justify-between items-center mb-8">
           <p className="text-slate-600 dark:text-slate-300">
-            {filteredEvents.length} event{filteredEvents.length !== 1 ? 's' : ''} found
+            {useBlockchainData 
+              ? `${filteredEventAddresses.length} event${filteredEventAddresses.length !== 1 ? 's' : ''} found`
+              : `${filteredEvents.length} event${filteredEvents.length !== 1 ? 's' : ''} found`
+            }
           </p>
           <div className="flex items-center space-x-2">
             <span className="text-sm text-slate-600 dark:text-slate-400">View:</span>
@@ -238,38 +424,64 @@ export default function EventsPage() {
           </div>
         </div>
 
-        {/* Events Grid */}
-        {filteredEvents.length > 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {filteredEvents.map((event) => (
-              <EventCard key={event.id} event={event} />
-            ))}
-          </div>
+                {/* Loading State */}
+                {isLoadingAddresses ? (
+                  <LoadingSpinner message="Checking for events on blockchain..." />
+                ) : useBlockchainData && filteredEventAddresses.length > 0 ? (
+                  /* Blockchain Events Grid */
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    {filteredEventAddresses.map((eventAddress) => (
+                      <BlockchainEventCard key={eventAddress} eventAddress={eventAddress} />
+                    ))}
+                  </div>
+                ) : !useBlockchainData && filteredEvents.length > 0 ? (
+                  /* Mock Events Grid */
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    {filteredEvents.map((event) => (
+                      <EventCard key={event.id} event={event} />
+                    ))}
+                  </div>
         ) : (
           <div className="text-center py-16">
             <svg className="w-16 h-16 text-slate-400 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.172 16.172a4 4 0 015.656 0M9 12h6m-6-4h6m2 5.291A7.962 7.962 0 0112 15c-2.34 0-4.291-1.004-5.824-2.709M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
             </svg>
             <h3 className="text-xl font-semibold text-slate-900 dark:text-white mb-2">
-              No events found
+              {useBlockchainData ? "No events created yet" : "No events found"}
             </h3>
             <p className="text-slate-600 dark:text-slate-300 mb-6">
-              Try adjusting your search criteria or browse all events.
+              {useBlockchainData 
+                ? "Be the first to create an event on the blockchain!" 
+                : "Try adjusting your search criteria or browse all events."
+              }
             </p>
-            <button
-              onClick={() => {
-                setSearchQuery("")
-                setSelectedCategory("all")
-              }}
-              className="px-6 py-3 bg-primary-gradient text-white rounded-lg bg-primary-gradient-hover transition-all duration-200 font-medium"
-            >
-              Clear Filters
-            </button>
+            {useBlockchainData ? (
+              <a
+                href="/create-event"
+                className="inline-flex items-center px-6 py-3 bg-primary-gradient text-white rounded-lg bg-primary-gradient-hover transition-all duration-200 font-medium"
+              >
+                <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                </svg>
+                Create First Event
+              </a>
+            ) : (
+              <button
+                onClick={() => {
+                  setSearchQuery("")
+                  setSelectedCategory("all")
+                }}
+                className="px-6 py-3 bg-primary-gradient text-white rounded-lg bg-primary-gradient-hover transition-all duration-200 font-medium"
+              >
+                Clear Filters
+              </button>
+            )}
           </div>
         )}
-      </main>
+        </main>
 
-      <Footer />
-    </div>
+        <Footer />
+      </div>
+    </ErrorBoundary>
   )
 }

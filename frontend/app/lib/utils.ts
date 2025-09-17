@@ -16,12 +16,7 @@ export function formatDate(date: Date | string): string {
 }
 
 export function formatPrice(price: number): string {
-  return new Intl.NumberFormat('en-US', {
-    style: 'currency',
-    currency: 'ETH',
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 4,
-  }).format(price)
+  return `${price.toFixed(4)} STT` // Somnia Testnet uses STT
 }
 
 export function shortenAddress(address: string): string {
