@@ -9,8 +9,21 @@ contract EventFactory is Ownable {
     mapping(address => EventManager[]) public userCreatedEvents;
     mapping(string => bool) public eventNameExists;
     mapping(string => address) public eventNameToContract;
+    mapping(address => bool) public isValidEventContract;
 
     mapping(address => uint256) public userEventCount;
+
+    // Global ticket tracking
+    struct UserTicket {
+        address eventContract;
+        uint256 tokenId;
+        uint256 purchaseTime;
+        string eventName;
+    }
+
+    mapping(address => UserTicket[]) public userAllTickets;
+    mapping(address => uint256) public userTicketCount;
+    mapping(address => mapping(address => uint256[])) public userTicketsByEvent;
 
     event EventCreated(
         address indexed eventContract,
@@ -21,6 +34,10 @@ contract EventFactory is Ownable {
         uint256 regEndTime,
         uint256 ticketFee,
         uint256 maxTickets
+    );
+
+    event TicketPurchased(
+        address indexed user, address indexed eventContract, uint256 tokenId, string eventName, uint256 purchaseTime
     );
 
     constructor() Ownable(msg.sender) {}
@@ -52,6 +69,9 @@ contract EventFactory is Ownable {
         eventNameExists[_eventName] = true;
         eventNameToContract[_eventName] = eventAddress;
 
+        // Mark as valid event contract for ticket tracking
+        isValidEventContract[eventAddress] = true;
+
         emit EventCreated(
             eventAddress, msg.sender, _eventName, _eventAcronym, _regStartTime, _regEndTime, _ticketFee, _maxTickets
         );
@@ -59,7 +79,15 @@ contract EventFactory is Ownable {
         return eventAddress;
     }
 
-    function getAllEvents() external view returns (EventManager[] memory) {
+    function getAllEvents() external view returns (address[] memory) {
+        address[] memory eventAddresses = new address[](allEvents.length);
+        for (uint256 i = 0; i < allEvents.length; i++) {
+            eventAddresses[i] = address(allEvents[i]);
+        }
+        return eventAddresses;
+    }
+
+    function getAllEventsContracts() external view returns (EventManager[] memory) {
         return allEvents;
     }
 
@@ -131,5 +159,43 @@ contract EventFactory is Ownable {
 
     function getUserEventCount(address user) external view returns (uint256) {
         return userEventCount[user];
+    }
+
+    // Global ticket tracking functions
+    function recordTicketPurchase(address user, uint256 tokenId, string memory eventName) external {
+        require(isValidEventContract[msg.sender], "Only valid event contracts can call this");
+
+        UserTicket memory newTicket = UserTicket({
+            eventContract: msg.sender,
+            tokenId: tokenId,
+            purchaseTime: block.timestamp,
+            eventName: eventName
+        });
+
+        userAllTickets[user].push(newTicket);
+        userTicketCount[user]++;
+        userTicketsByEvent[user][msg.sender].push(tokenId);
+
+        emit TicketPurchased(user, msg.sender, tokenId, eventName, block.timestamp);
+    }
+
+    function getUserAllTickets(address user) external view returns (UserTicket[] memory) {
+        return userAllTickets[user];
+    }
+
+    function getUserTicketCount(address user) external view returns (uint256) {
+        return userTicketCount[user];
+    }
+
+    function getUserTicketsForEvent(address user, address eventContract) external view returns (uint256[] memory) {
+        return userTicketsByEvent[user][eventContract];
+    }
+
+    function getTotalTicketsSold() external view returns (uint256) {
+        uint256 totalSold = 0;
+        for (uint256 i = 0; i < allEvents.length; i++) {
+            totalSold += allEvents[i].ticketsSold();
+        }
+        return totalSold;
     }
 }
