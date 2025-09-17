@@ -1,142 +1,127 @@
-// SPDX-License-Identifier: UNLICENSED
-pragma solidity ^0.8.27;
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.20;
 
 import {ERC721} from "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import {ERC721URIStorage} from "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
 import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
 
+
 contract EventManager is ERC721, ERC721URIStorage, Ownable {
+    address public eventOwner;
+    string public eventName;
+    uint256 public regStartTime;
+    uint256 public regEndTime;
+    uint256 public ticketFee;
+    bool public ticketFeeRequired;
+    uint256 public maxTickets;
+    uint256 public ticketsSold;
+    string public ticketURI;
+    bool public eventEnded;
     uint256 private _nextTokenId;
 
-    struct Event {
-        string eventName;
-        bytes32 eventId;
-        uint256 regStartBlock;
-        uint256 regEndblock;
-        uint8 ticketFee;
-        bool ticketRequired;
-        uint256 maxTickets;
-        uint256 ticketsSold;
-        string ticketURI;
-    }
-
-    mapping(bytes32 => Event) public IdtoEvent;
-    Event[] public allEvents;
-    Event[] public liveEvents;
-    Event[] public pastEvents;
-
-    event EventCreated(
-        string eventName,
-        bytes32 eventId,
-        uint256 regStartBlock,
-        uint256 regEndblock,
-        uint8 ticketFee,
-        bool ticketRequired,
-        uint256 maxTickets
-    );
-    event UserRegistered(address user, bytes32 eventId, uint256 tokenId);
-
-    constructor() ERC721("EventTicket", "ETK") Ownable(msg.sender) {}
-
-    struct User {
-        uint256[] eventsAttended;
-        uint256[] eventsCreated;
-    }
-
-    mapping(address => User) internal users;
-
-    function createEvent(
+    event UserRegistered(address user, string eventName, uint256 tokenId);
+    event EventEnded(string eventName);
+    event TicketTransferred(address from, address to, uint256 tokenId);
+    constructor(
         string memory _eventName,
-        uint256 _regStartBlock,
-        uint256 _regEndblock,
-        uint8 _ticketFee,
+        string memory _eventAcronym,
+        uint256 _regStartTime,
+        uint256 _regEndTime,
+        uint256 _ticketFee,
         uint256 _maxTickets,
-        string memory _ticketURI
-    ) public onlyOwner {
-        require(_regStartBlock >= block.number, "Start block must be in the future");
-        require(_regEndblock > _regStartBlock, "End block must be after start block");
+        string memory _ticketURI,
+        address _eventOwner
+    ) ERC721(_eventName, _eventAcronym) Ownable(_eventOwner) {
+        eventOwner = _eventOwner;
+        
+        require(_regStartTime >= block.timestamp, "Start time must be in the future");
+        require(_regEndTime > _regStartTime, "End time must be after start time");
         require(_maxTickets > 0, "Max tickets must be greater than zero");
-        bytes32 eventId = keccak256(
-            abi.encodePacked(
-                msg.sender, address(this), _eventName, _regStartBlock, _regEndblock, _ticketFee, _maxTickets
-            )
+        require(bytes(_eventName).length > 0, "Event name cannot be empty");
+        
+        eventName = _eventName;
+        regStartTime = _regStartTime;
+        regEndTime = _regEndTime;
+        ticketFee = _ticketFee;
+        ticketFeeRequired = _ticketFee > 0;
+        maxTickets = _maxTickets;
+        ticketsSold = 0;
+        ticketURI = _ticketURI;
+        eventEnded = false;
+    }
+
+    mapping(address => uint256[]) public userTickets;
+
+    function getEventInfo() public view returns (
+        string memory _eventName,
+        uint256 _regStartTime,
+        uint256 _regEndTime,
+        uint256 _ticketFee,
+        bool _ticketFeeRequired,
+        uint256 _maxTickets,
+        uint256 _ticketsSold,
+        string memory _ticketURI,
+        bool _eventEnded
+    ) {
+        return (
+            eventName,
+            regStartTime,
+            regEndTime,
+            ticketFee,
+            ticketFeeRequired,
+            maxTickets,
+            ticketsSold,
+            ticketURI,
+            eventEnded
         );
-        if (_ticketFee > 0) {
-            IdtoEvent[eventId] =
-                Event(_eventName, eventId, _regStartBlock, _regEndblock, _ticketFee, true, _maxTickets, 0, _ticketURI);
-        } else {
-            IdtoEvent[eventId] =
-                Event(_eventName, eventId, _regStartBlock, _regEndblock, 0, false, _maxTickets, 0, _ticketURI);
-        }
-        users[msg.sender].eventsCreated.push(uint256(eventId));
-        allEvents.push(IdtoEvent[eventId]);
-        liveEvents.push(IdtoEvent[eventId]);
-        emit EventCreated(_eventName, eventId, _regStartBlock, _regEndblock, _ticketFee, _ticketFee > 0, _maxTickets);
     }
 
-    function getEventById(bytes32 eventId) public view returns (Event memory) {
-        return IdtoEvent[eventId];
-    }
-
-    function getLiveEvents() public view returns (Event[] memory) {
-        return liveEvents;
-    }
-
-    function getPastEvents() public view returns (Event[] memory) {
-        return pastEvents;
-    }
-
-    function getAllEvents() public view returns (Event[] memory) {
-        return allEvents;
-    }
-
-    function registerForEvent(bytes32 eventId) public payable {
-        Event storage _event = IdtoEvent[eventId];
-        require(block.number >= _event.regStartBlock, "Registration has not started yet");
-        require(block.number <= _event.regEndblock, "Registration has ended");
-        require(_event.ticketsSold < _event.maxTickets, "Event is sold out");
-        if (_event.ticketRequired) {
-            require(msg.value == _event.ticketFee, "Incorrect ticket fee");
+    function registerForEvent() public payable {
+        require(!eventEnded, "Event has ended");
+        require(block.timestamp >= regStartTime, "Registration has not started yet");
+        require(block.timestamp <= regEndTime, "Registration has ended");
+        require(ticketsSold < maxTickets, "Event is sold out");
+        
+        if (ticketFeeRequired) {
+            require(msg.value == ticketFee, "Incorrect ticket fee");
         } else {
             require(msg.value == 0, "No ticket fee required");
         }
-        _event.ticketsSold += 1;
+        
+        ticketsSold += 1;
         uint256 tokenId = _nextTokenId++;
         _safeMint(msg.sender, tokenId);
-        _setTokenURI(tokenId, _event.ticketURI);
-        users[msg.sender].eventsAttended.push(uint256(eventId));
-        emit UserRegistered(msg.sender, eventId, tokenId);
+        _setTokenURI(tokenId, ticketURI);
+        userTickets[msg.sender].push(tokenId);
+        
+        emit UserRegistered(msg.sender, eventName, tokenId);
     }
 
-    function endEvent(bytes32 eventId) public onlyOwner {
-        Event memory _event = IdtoEvent[eventId];
-        require(block.number > _event.regEndblock, "Event has not ended yet");
-        // Move event from liveEvents to pastEvents
-        for (uint256 i = 0; i < liveEvents.length; i++) {
-            if (liveEvents[i].eventId == eventId) {
-                pastEvents.push(liveEvents[i]);
-                liveEvents[i] = liveEvents[liveEvents.length - 1];
-                liveEvents.pop();
-                break;
-            }
-        }
+    function endEvent() public {
+        require(msg.sender == eventOwner, "Only event owner can end event");
+        require(block.timestamp > regEndTime, "Event has not ended yet");
+        require(!eventEnded, "Event already ended");
+        
+        eventEnded = true;
+        emit EventEnded(eventName);
     }
 
     function transferTicket(address to, uint256 tokenId) public {
         require(ownerOf(tokenId) == msg.sender, "You are not the owner of this ticket");
         _transfer(msg.sender, to, tokenId);
+        emit TicketTransferred(msg.sender, to, tokenId);
     }
 
-    function getUserEvents(address user) public view returns (uint256[] memory, uint256[] memory) {
-        return (users[user].eventsAttended, users[user].eventsCreated);
+    function getUserTickets(address user) public view returns (uint256[] memory) {
+        return userTickets[user];
     }
-
-    function getUserAttendedEvents(address user) public view returns (uint256[] memory) {
-        return users[user].eventsAttended;
+    
+    function isEventLive() public view returns (bool) {
+        return !eventEnded && block.timestamp >= regStartTime && block.timestamp <= regEndTime;
     }
-
-    function getUserCreatedEvents(address user) public view returns (uint256[] memory) {
-        return users[user].eventsCreated;
+    
+    function isEventPast() public view returns (bool) {
+        return eventEnded || block.timestamp > regEndTime;
     }
 
     function withdraw() public onlyOwner {
