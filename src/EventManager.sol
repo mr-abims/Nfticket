@@ -5,7 +5,6 @@ import {ERC721} from "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import {ERC721URIStorage} from "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
 import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
 
-
 contract EventManager is ERC721, ERC721URIStorage, Ownable {
     address public eventOwner;
     string public eventName;
@@ -22,6 +21,7 @@ contract EventManager is ERC721, ERC721URIStorage, Ownable {
     event UserRegistered(address user, string eventName, uint256 tokenId);
     event EventEnded(string eventName);
     event TicketTransferred(address from, address to, uint256 tokenId);
+
     constructor(
         string memory _eventName,
         string memory _eventAcronym,
@@ -33,12 +33,12 @@ contract EventManager is ERC721, ERC721URIStorage, Ownable {
         address _eventOwner
     ) ERC721(_eventName, _eventAcronym) Ownable(_eventOwner) {
         eventOwner = _eventOwner;
-        
+
         require(_regStartTime >= block.timestamp, "Start time must be in the future");
         require(_regEndTime > _regStartTime, "End time must be after start time");
         require(_maxTickets > 0, "Max tickets must be greater than zero");
         require(bytes(_eventName).length > 0, "Event name cannot be empty");
-        
+
         eventName = _eventName;
         regStartTime = _regStartTime;
         regEndTime = _regEndTime;
@@ -52,17 +52,21 @@ contract EventManager is ERC721, ERC721URIStorage, Ownable {
 
     mapping(address => uint256[]) public userTickets;
 
-    function getEventInfo() public view returns (
-        string memory _eventName,
-        uint256 _regStartTime,
-        uint256 _regEndTime,
-        uint256 _ticketFee,
-        bool _ticketFeeRequired,
-        uint256 _maxTickets,
-        uint256 _ticketsSold,
-        string memory _ticketURI,
-        bool _eventEnded
-    ) {
+    function getEventInfo()
+        public
+        view
+        returns (
+            string memory _eventName,
+            uint256 _regStartTime,
+            uint256 _regEndTime,
+            uint256 _ticketFee,
+            bool _ticketFeeRequired,
+            uint256 _maxTickets,
+            uint256 _ticketsSold,
+            string memory _ticketURI,
+            bool _eventEnded
+        )
+    {
         return (
             eventName,
             regStartTime,
@@ -81,19 +85,19 @@ contract EventManager is ERC721, ERC721URIStorage, Ownable {
         require(block.timestamp >= regStartTime, "Registration has not started yet");
         require(block.timestamp <= regEndTime, "Registration has ended");
         require(ticketsSold < maxTickets, "Event is sold out");
-        
+
         if (ticketFeeRequired) {
             require(msg.value == ticketFee, "Incorrect ticket fee");
         } else {
             require(msg.value == 0, "No ticket fee required");
         }
-        
+
         ticketsSold += 1;
         uint256 tokenId = _nextTokenId++;
         _safeMint(msg.sender, tokenId);
         _setTokenURI(tokenId, ticketURI);
         userTickets[msg.sender].push(tokenId);
-        
+
         emit UserRegistered(msg.sender, eventName, tokenId);
     }
 
@@ -101,7 +105,7 @@ contract EventManager is ERC721, ERC721URIStorage, Ownable {
         require(msg.sender == eventOwner, "Only event owner can end event");
         require(block.timestamp > regEndTime, "Event has not ended yet");
         require(!eventEnded, "Event already ended");
-        
+
         eventEnded = true;
         emit EventEnded(eventName);
     }
@@ -115,11 +119,11 @@ contract EventManager is ERC721, ERC721URIStorage, Ownable {
     function getUserTickets(address user) public view returns (uint256[] memory) {
         return userTickets[user];
     }
-    
+
     function isEventLive() public view returns (bool) {
         return !eventEnded && block.timestamp >= regStartTime && block.timestamp <= regEndTime;
     }
-    
+
     function isEventPast() public view returns (bool) {
         return eventEnded || block.timestamp > regEndTime;
     }
