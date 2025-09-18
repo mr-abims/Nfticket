@@ -1,4 +1,5 @@
 import Link from "next/link"
+import Image from "next/image"
 
 export function Footer() {
   return (
@@ -8,8 +9,14 @@ export function Footer() {
           {/* Company Info */}
           <div className="space-y-4">
             <Link href="/" className="flex items-center space-x-2">
-              <div className="w-8 h-8 bg-primary-gradient rounded-lg flex items-center justify-center">
-                <span className="text-white font-bold text-sm">NT</span>
+              <div className="w-8 h-8 flex items-center justify-center">
+                <Image 
+                  src="/Ticketify.svg" 
+                  alt="Ticketify" 
+                  width={32} 
+                  height={32}
+                  className="object-contain"
+                />
               </div>
               <span className="text-xl font-bold">Ticketify</span>
             </Link>
@@ -68,9 +75,9 @@ export function Footer() {
                 </Link>
               </li>
               <li>
-                <Link href="/marketplace" className="text-slate-300 hover:text-white transition-colors">
+                <span className="text-slate-500 cursor-not-allowed">
                   Marketplace
-                </Link>
+                </span>
               </li>
             </ul>
           </div>
@@ -80,24 +87,24 @@ export function Footer() {
             <h3 className="text-lg font-semibold mb-4">Resources</h3>
             <ul className="space-y-3 text-sm">
               <li>
-                <Link href="/docs" className="text-slate-300 hover:text-white transition-colors">
+                <span className="text-slate-500 cursor-not-allowed">
                   Documentation
-                </Link>
+                </span>
               </li>
               <li>
-                <Link href="/help" className="text-slate-300 hover:text-white transition-colors">
+                <span className="text-slate-500 cursor-not-allowed">
                   Help Center
-                </Link>
+                </span>
               </li>
               <li>
-                <Link href="/blog" className="text-slate-300 hover:text-white transition-colors">
+                <span className="text-slate-500 cursor-not-allowed">
                   Blog
-                </Link>
+                </span>
               </li>
               <li>
-                <Link href="/api" className="text-slate-300 hover:text-white transition-colors">
+                <span className="text-slate-500 cursor-not-allowed">
                   API Reference
-                </Link>
+                </span>
               </li>
             </ul>
           </div>
@@ -107,24 +114,24 @@ export function Footer() {
             <h3 className="text-lg font-semibold mb-4">Company</h3>
             <ul className="space-y-3 text-sm">
               <li>
-                <Link href="/about" className="text-slate-300 hover:text-white transition-colors">
+                <span className="text-slate-500 cursor-not-allowed">
                   About Us
-                </Link>
+                </span>
               </li>
               <li>
-                <Link href="/careers" className="text-slate-300 hover:text-white transition-colors">
+                <span className="text-slate-500 cursor-not-allowed">
                   Careers
-                </Link>
+                </span>
               </li>
               <li>
-                <Link href="/privacy" className="text-slate-300 hover:text-white transition-colors">
+                <span className="text-slate-500 cursor-not-allowed">
                   Privacy Policy
-                </Link>
+                </span>
               </li>
               <li>
-                <Link href="/terms" className="text-slate-300 hover:text-white transition-colors">
+                <span className="text-slate-500 cursor-not-allowed">
                   Terms of Service
-                </Link>
+                </span>
               </li>
             </ul>
           </div>
@@ -138,9 +145,36 @@ export function Footer() {
           <div className="flex items-center space-x-6 mt-4 md:mt-0">
             <span className="text-slate-400 text-sm">Built on</span>
             <div className="flex items-center space-x-4">
-              <span className="text-slate-300 text-sm font-medium">Somnia</span>
-              <span className="text-slate-300 text-sm font-medium">IPFS</span>
-              <span className="text-slate-300 text-sm font-medium">ZKVerify</span>
+              <div className="flex items-center space-x-2">
+                <Image 
+                  src="/Somnia.svg" 
+                  alt="Somnia" 
+                  width={20} 
+                  height={4}
+                  className="object-contain"
+                  style={{ width: '60px', height: '20px' }}
+                />
+              </div>
+              <div className="flex items-center space-x-2">
+                <Image 
+                  src="/IPFS_logo.svg" 
+                  alt="IPFS" 
+                  width={20} 
+                  height={20}
+                  className="object-contain"
+                />
+                <span className="text-slate-300 text-sm font-medium">IPFS</span>
+              </div>
+              <div className="flex items-center space-x-2">
+                <Image 
+                  src="/zkVerify-white.svg" 
+                  alt="zkVerify" 
+                  width={22} 
+                  height={4}
+                  className="object-contain"
+                  style={{ width: '60px', height: '20px' }}
+                />
+              </div>
             </div>
           </div>
         </div>

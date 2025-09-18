@@ -428,8 +428,14 @@ function DashboardContent() {
   if (!isConnected) {
     return (
       <ErrorBoundary>
-        <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-800">
-          <Header />
+        <div className="min-h-screen relative overflow-hidden bg-black">
+          {/* Background decoration */}
+          <div className="absolute inset-0 bg-gradient-to-r from-black/10 to-purple-600/10 dark:from-black/20 dark:to-purple-400/10"></div>
+          <div className="absolute top-0 right-0 -translate-y-12 translate-x-12 w-96 h-96 bg-gradient-to-r from-black/30 to-purple-400 rounded-full blur-3xl opacity-20"></div>
+          <div className="absolute bottom-0 left-0 translate-y-12 -translate-x-12 w-96 h-96 bg-gradient-to-r from-purple-400 to-pink-400 rounded-full blur-3xl opacity-20"></div>
+          
+          <div className="relative">
+            <Header />
           <main className="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
             <div className="max-w-4xl mx-auto text-center">
               <div className="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg p-8">
@@ -446,6 +452,7 @@ function DashboardContent() {
             </div>
           </main>
           <Footer />
+          </div>
         </div>
       </ErrorBoundary>
     )
@@ -453,8 +460,14 @@ function DashboardContent() {
 
   return (
     <ErrorBoundary>
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-800">
-        <Header />
+      <div className="min-h-screen relative overflow-hidden bg-black">
+        {/* Background decoration */}
+        <div className="absolute inset-0 bg-gradient-to-r from-black/10 to-purple-600/10 dark:from-black/20 dark:to-purple-400/10"></div>
+        <div className="absolute top-0 right-0 -translate-y-12 translate-x-12 w-96 h-96 bg-gradient-to-r from-black/30 to-purple-400 rounded-full blur-3xl opacity-20"></div>
+        <div className="absolute bottom-0 left-0 translate-y-12 -translate-x-12 w-96 h-96 bg-gradient-to-r from-purple-400 to-pink-400 rounded-full blur-3xl opacity-20"></div>
+        
+        <div className="relative">
+          <Header />
         
         <main className="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
 
@@ -564,71 +577,128 @@ function DashboardContent() {
         </div>
 
         {/* User Info Card */}
-        <div className="bg-primary-gradient rounded-2xl p-8 mb-8 text-white">
-          <div className="flex flex-col md:flex-row md:items-center md:justify-between">
-            <div>
-              <h2 className="text-2xl font-bold mb-2">Welcome back!</h2>
-              <p className="text-white/90 mb-4">
-                Address: {shortenAddress(address || '0x...')}
-              </p>
-              <div className="flex items-center space-x-6">
-                <div>
-                  <p className="text-white/90 text-sm">Balance</p>
-                  {useBlockchainData ? (
-                    isLoadingBalance ? (
-                      <div className="flex items-center">
-                        <svg className="animate-spin h-4 w-4 mr-2" viewBox="0 0 24 24">
-                          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none"/>
-                          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"/>
-                        </svg>
-                        <span className="text-lg font-bold">Loading...</span>
-                      </div>
-                    ) : (
-                      <>
-                        <p className="text-2xl font-bold">{Number(userBalance).toFixed(4)} STT</p>
-                      </>
-                    )
-                  ) : (
-                    <>
-                      <p className="text-2xl font-bold">--</p>
-                      <p className="text-xs text-white/70">Connect wallet</p>
-                    </>
-                  )}
+        <div className="bg-primary-gradient rounded-2xl p-8 mb-8 text-white relative overflow-hidden">
+          {/* Subtle background pattern */}
+          <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent"></div>
+          <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -translate-y-16 translate-x-16"></div>
+          
+          <div className="relative">
+            <div className="flex flex-col md:flex-row md:items-center md:justify-between">
+              <div className="flex-1">
+                <div className="flex items-center space-x-3 mb-3">
+                  <div className="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center">
+                    <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                    </svg>
+                  </div>
+                  <div>
+                    <h2 className="text-2xl font-bold">Welcome back!</h2>
+                    <p className="text-white/80 text-sm">
+                      {new Date().toLocaleDateString('en-US', { 
+                        weekday: 'long', 
+                        year: 'numeric', 
+                        month: 'long', 
+                        day: 'numeric' 
+                      })}
+                    </p>
+                  </div>
                 </div>
-                <div>
-                  <p className="text-white/90 text-sm">Events Created</p>
-                  <p className="text-2xl font-bold">
-                    {useBlockchainData ? (userCreatedEvents?.length || 0) : '--'}
+                
+                <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4 mb-4">
+                  <div className="flex items-center space-x-2 mb-2">
+                    <svg className="w-4 h-4 text-white/70" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" />
+                    </svg>
+                    <span className="text-white/90 text-sm font-medium">Wallet Address</span>
+                  </div>
+                  <p className="text-white font-mono text-sm bg-black/20 rounded-lg px-3 py-2 inline-block">
+                    {shortenAddress(address || '0x...')}
                   </p>
                 </div>
-                <div>
-                  <p className="text-white/90 text-sm">Tickets Owned</p>
-                  <p className="text-2xl font-bold">
-                    {useBlockchainData ? 
-                      (isLoadingTickets ? (
-                        <span className="flex items-center">
-                          <svg className="animate-spin h-5 w-5 mr-2" viewBox="0 0 24 24">
+                
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                  <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4">
+                    <div className="flex items-center space-x-2 mb-2">
+                      <svg className="w-4 h-4 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1" />
+                      </svg>
+                      <span className="text-white/90 text-sm font-medium">Balance</span>
+                    </div>
+                    {useBlockchainData ? (
+                      isLoadingBalance ? (
+                        <div className="flex items-center">
+                          <svg className="animate-spin h-4 w-4 mr-2" viewBox="0 0 24 24">
                             <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none"/>
-                            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"/>
+                            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 714 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"/>
                           </svg>
-                          Loading...
-                        </span>
-                      ) : (userTicketCount || 0)) : '--'
-                    }
-                  </p>
+                          <span className="text-lg font-bold">Loading...</span>
+                        </div>
+                      ) : (
+                        <div>
+                          <p className="text-2xl font-bold">{Number(userBalance).toFixed(4)} STT</p>
+                          <p className="text-xs text-white/70">Available to spend</p>
+                        </div>
+                      )
+                    ) : (
+                      <div>
+                        <p className="text-2xl font-bold">--</p>
+                        <p className="text-xs text-white/70">Connect wallet</p>
+                      </div>
+                    )}
+                  </div>
+                  
+                  <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4">
+                    <div className="flex items-center space-x-2 mb-2">
+                      <svg className="w-4 h-4 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                      </svg>
+                      <span className="text-white/90 text-sm font-medium">Events Created</span>
+                    </div>
+                    <p className="text-2xl font-bold">
+                      {useBlockchainData ? (userCreatedEvents?.length || 0) : '--'}
+                    </p>
+                    <p className="text-xs text-white/70">Total events</p>
+                  </div>
+                  
+                  <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4">
+                    <div className="flex items-center space-x-2 mb-2">
+                      <svg className="w-4 h-4 text-orange-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 5v2m0 4v2m0 4v2M5 5a2 2 0 00-2 2v3a2 2 0 110 4v3a2 2 0 002 2h14a2 2 0 002-2v-3a2 2 0 110-4V7a2 2 0 00-2-2H5z" />
+                      </svg>
+                      <span className="text-white/90 text-sm font-medium">Tickets Owned</span>
+                    </div>
+                    <p className="text-2xl font-bold">
+                      {useBlockchainData ? 
+                        (isLoadingTickets ? (
+                          <span className="flex items-center">
+                            <svg className="animate-spin h-5 w-5 mr-2" viewBox="0 0 24 24">
+                              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none"/>
+                              <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 714 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"/>
+                            </svg>
+                            ...
+                          </span>
+                        ) : (userTicketCount || 0)) : '--'
+                      }
+                    </p>
+                    <p className="text-xs text-white/70">In your collection</p>
+                  </div>
                 </div>
               </div>
-            </div>
-            <div className="mt-6 md:mt-0">
-              <Link
-                href="/create-event"
-                className="inline-flex items-center px-6 py-3 bg-white text-purple-600 rounded-lg hover:bg-purple-50 transition-colors font-medium"
-              >
-                <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
-                </svg>
-                Create Event
-              </Link>
+              
+              <div className="mt-6 md:mt-0 md:ml-8">
+                <Link
+                  href="/create-event"
+                  className="inline-flex items-center px-6 py-3 bg-white text-purple-600 rounded-xl hover:bg-purple-50 hover:scale-105 transition-all duration-200 font-medium shadow-lg hover:shadow-xl"
+                >
+                  <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                  </svg>
+                  Create Event
+                </Link>
+                <p className="text-white/70 text-xs mt-2 text-center">
+                  Launch your next event
+                </p>
+              </div>
             </div>
           </div>
         </div>
@@ -983,6 +1053,7 @@ function DashboardContent() {
         />
 
         <Footer />
+        </div>
       </div>
     </ErrorBoundary>
   )
