@@ -323,8 +323,14 @@ export default function CreateEventPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-800">
-      <Header />
+    <div className="min-h-screen relative overflow-hidden bg-black">
+      {/* Background decoration */}
+      <div className="absolute inset-0 bg-gradient-to-r from-black/10 to-purple-600/10 dark:from-black/20 dark:to-purple-400/10"></div>
+      <div className="absolute top-0 right-0 -translate-y-12 translate-x-12 w-96 h-96 bg-gradient-to-r from-black/30 to-purple-400 rounded-full blur-3xl opacity-20"></div>
+      <div className="absolute bottom-0 left-0 translate-y-12 -translate-x-12 w-96 h-96 bg-gradient-to-r from-purple-400 to-pink-400 rounded-full blur-3xl opacity-20"></div>
+      
+      <div className="relative">
+        <Header />
       
       <main className="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
         {/* Wallet Connection Check */}
@@ -720,6 +726,7 @@ export default function CreateEventPage() {
       </main>
 
       <Footer />
+      </div>
 
       {/* Event Creation Modal */}
       <EventCreationModal

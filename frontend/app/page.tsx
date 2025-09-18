@@ -5,6 +5,7 @@ import { HeroSection } from "./components/HeroSection"
 import { FeaturesSection } from "./components/FeaturesSection"
 import { EventsPreview } from "./components/EventsPreview"
 import { StatsSection } from "./components/StatsSection"
+import { CreateEventCTA } from "./components/CreateEventCTA"
 import { Footer } from "./components/Footer"
 
 export default function Home() {
@@ -16,6 +17,7 @@ export default function Home() {
         <FeaturesSection />
         <EventsPreview />
         <StatsSection />
+        <CreateEventCTA />
       </main>
       <Footer />
     </div>

@@ -1,4 +1,5 @@
 import Link from "next/link"
+import Image from "next/image"
 
 export function HeroSection() {
   return (
@@ -13,7 +14,14 @@ export function HeroSection() {
           {/* Badge */}
           <div className="inline-flex items-center px-4 py-2 bg-white/10 text-white rounded-full text-sm font-medium mb-8">
             <span className="w-2 h-2 bg-purple-500 rounded-full mr-2 animate-pulse"></span>
-            Powered by Blockchain Technology
+            Powered by{" "}
+            <Image 
+              src="/Somnia.svg" 
+              alt="Somnia" 
+              width={70} 
+              height={70}
+              className="ml-2 object-contain"
+            />
           </div>
 
           {/* Main heading */}
