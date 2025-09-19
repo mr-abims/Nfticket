@@ -7,10 +7,9 @@ import { EventCard } from "../components/EventCard"
 import { ErrorBoundary, LoadingSpinner, ErrorMessage } from "../components/ErrorBoundary"
 import { NetworkCheck } from "../components/NetworkCheck"
 import { EventFilters, Event } from "../types/event"
-import { useGetAllEvents, useGetEventInfo } from "../hooks/useContracts"
+import { useGetAllEvents, useGetEventInfo, useGetLiveEvents, useGetPastEvents } from "../hooks/useContracts"
 import { areContractsConfigured } from "../contracts/config"
 
-// Mock data - in a real app, this would come from the blockchain/API
 const mockEvents = [
   {
     id: "1",
@@ -107,6 +106,38 @@ const mockEvents = [
     contractAddress: "0xf123...4567",
     isActive: true,
     createdAt: "2024-02-15T13:00:00Z"
+  },
+  {
+    id: "7",
+    title: "Crypto Trading Workshop",
+    description: "Learn advanced trading strategies and risk management in cryptocurrency markets.",
+    imageUrl: "https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=400&h=300&fit=crop",
+    date: "2024-01-15T14:00:00Z",
+    location: "London, UK",
+    category: "workshop" as const,
+    ticketPrice: 0.12,
+    totalTickets: 80,
+    availableTickets: 0,
+    organizer: "0x789a...bcde",
+    contractAddress: "0x1234...5678",
+    isActive: false,
+    createdAt: "2023-12-01T10:00:00Z"
+  },
+  {
+    id: "8",
+    title: "NFT Art Gallery Opening",
+    description: "Exclusive opening of the world's first fully digital NFT art gallery.",
+    imageUrl: "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=400&h=300&fit=crop",
+    date: "2024-02-20T18:00:00Z",
+    location: "Paris, France",
+    category: "exhibition" as const,
+    ticketPrice: 0.08,
+    totalTickets: 150,
+    availableTickets: 0,
+    organizer: "0x89ab...cdef",
+    contractAddress: "0x2345...6789",
+    isActive: false,
+    createdAt: "2024-01-01T12:00:00Z"
   }
 ]
 
@@ -250,9 +281,27 @@ export default function EventsPage() {
   const [searchQuery, setSearchQuery] = useState("")
   const [selectedCategory, setSelectedCategory] = useState<string>("all")
   const [sortBy, setSortBy] = useState<string>("date")
+  const [selectedStatus, setSelectedStatus] = useState<string>("all")
+  const [activeTab, setActiveTab] = useState<"all" | "live" | "past">("all")
 
-  // Get all events from the factory
-  const { events: eventAddresses, isLoading: isLoadingAddresses, error: addressError, refetch } = useGetAllEvents()
+  // Get events from the factory based on selected tab
+  const { events: allEventAddresses, isLoading: isLoadingAll, error: allError, refetch: refetchAll } = useGetAllEvents()
+  const { events: liveEventAddresses, isLoading: isLoadingLive, error: liveError, refetch: refetchLive } = useGetLiveEvents()
+  const { events: pastEventAddresses, isLoading: isLoadingPast, error: pastError, refetch: refetchPast } = useGetPastEvents()
+
+  // Determine which events to use based on active tab
+  const getCurrentEvents = () => {
+    switch (activeTab) {
+      case "live":
+        return { events: liveEventAddresses, isLoading: isLoadingLive, error: liveError, refetch: refetchLive }
+      case "past":
+        return { events: pastEventAddresses, isLoading: isLoadingPast, error: pastError, refetch: refetchPast }
+      default:
+        return { events: allEventAddresses, isLoading: isLoadingAll, error: allError, refetch: refetchAll }
+    }
+  }
+
+  const { events: eventAddresses, isLoading: isLoadingAddresses, error: addressError, refetch } = getCurrentEvents()
 
   // Determine if we should use blockchain data or mock data
   const useBlockchainData = areContractsConfigured() && !addressError
@@ -275,6 +324,26 @@ export default function EventsPage() {
     { value: "availability", label: "Availability" }
   ]
 
+  const statusOptions = [
+    { value: "all", label: "All Status" },
+    { value: "live", label: "Live Events" },
+    { value: "past", label: "Past Events" },
+    { value: "upcoming", label: "Upcoming" }
+  ]
+
+  // Helper function to determine event status for mock events
+  const getEventStatus = (event: Event) => {
+    const now = new Date()
+    const eventDate = new Date(event.date)
+    const isUpcoming = eventDate > now
+    const isLive = event.isActive && !isUpcoming
+    const isPast = !event.isActive || eventDate < now
+
+    if (isLive) return "live"
+    if (isPast) return "past"
+    return "upcoming"
+  }
+
   // For blockchain events, we can't filter/sort until data is loaded
   // For mock events, we can filter and sort normally
   const filteredEvents = useBlockchainData ? [] : mockEvents
@@ -283,7 +352,8 @@ export default function EventsPage() {
                            event.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
                            event.location.toLowerCase().includes(searchQuery.toLowerCase())
       const matchesCategory = selectedCategory === "all" || event.category === selectedCategory
-      return matchesSearch && matchesCategory
+      const matchesStatus = selectedStatus === "all" || getEventStatus(event) === selectedStatus
+      return matchesSearch && matchesCategory && matchesStatus
     })
     .sort((a, b) => {
       switch (sortBy) {
@@ -308,7 +378,7 @@ export default function EventsPage() {
 
   return (
     <ErrorBoundary>
-      <div className="min-h-screen relative overflow-hidden bg-black">
+      <div className="min-h-screen relative overflow-hidden" style={{ backgroundColor: '#010612' }}>
         {/* Background decoration */}
         <div className="absolute inset-0 bg-gradient-to-r from-black/10 to-purple-600/10 dark:from-black/20 dark:to-purple-400/10"></div>
         <div className="absolute top-0 right-0 -translate-y-12 translate-x-12 w-96 h-96 bg-gradient-to-r from-black/30 to-purple-400 rounded-full blur-3xl opacity-20"></div>
@@ -356,6 +426,70 @@ export default function EventsPage() {
           </p>
         </div>
 
+        {/* Event Status Tabs */}
+        {useBlockchainData && (
+          <div className="max-w-6xl mx-auto mb-8">
+            <div className="bg-white dark:bg-slate-900 rounded-2xl p-2 shadow-lg border border-slate-200 dark:border-slate-700">
+              <div className="flex space-x-2">
+                <button
+                  onClick={() => setActiveTab("all")}
+                  className={`flex-1 px-6 py-3 rounded-xl font-medium transition-all duration-200 ${
+                    activeTab === "all"
+                      ? "bg-purple-600 text-white shadow-lg"
+                      : "text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800"
+                  }`}
+                >
+                  <div className="flex items-center justify-center space-x-2">
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+                    </svg>
+                    <span>All Events</span>
+                    <span className="text-xs bg-white/20 dark:bg-black/20 px-2 py-1 rounded-full">
+                      {allEventAddresses?.length || 0}
+                    </span>
+                  </div>
+                </button>
+                <button
+                  onClick={() => setActiveTab("live")}
+                  className={`flex-1 px-6 py-3 rounded-xl font-medium transition-all duration-200 ${
+                    activeTab === "live"
+                      ? "bg-green-600 text-white shadow-lg"
+                      : "text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800"
+                  }`}
+                >
+                  <div className="flex items-center justify-center space-x-2">
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5.636 18.364a9 9 0 010-12.728m12.728 0a9 9 0 010 12.728m-9.9-2.829a5 5 0 010-7.07m7.072 0a5 5 0 010 7.07M13 12a1 1 0 11-2 0 1 1 0 012 0z" />
+                    </svg>
+                    <span>Live Events</span>
+                    <span className="text-xs bg-white/20 dark:bg-black/20 px-2 py-1 rounded-full">
+                      {liveEventAddresses?.length || 0}
+                    </span>
+                  </div>
+                </button>
+                <button
+                  onClick={() => setActiveTab("past")}
+                  className={`flex-1 px-6 py-3 rounded-xl font-medium transition-all duration-200 ${
+                    activeTab === "past"
+                      ? "bg-slate-600 text-white shadow-lg"
+                      : "text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800"
+                  }`}
+                >
+                  <div className="flex items-center justify-center space-x-2">
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    <span>Past Events</span>
+                    <span className="text-xs bg-white/20 dark:bg-black/20 px-2 py-1 rounded-full">
+                      {pastEventAddresses?.length || 0}
+                    </span>
+                  </div>
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
         {/* Filters and Search */}
         <div className="bg-white dark:bg-slate-900 rounded-2xl p-6 shadow-lg border border-slate-200 dark:border-slate-700 mb-8">
           <div className="flex flex-col lg:flex-row gap-4">
@@ -390,6 +524,21 @@ export default function EventsPage() {
               </select>
             </div>
 
+            {/* Status Filter */}
+            <div className="lg:w-48">
+              <select
+                value={selectedStatus}
+                onChange={(e) => setSelectedStatus(e.target.value)}
+                className="w-full px-4 py-3 border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent bg-white dark:bg-slate-800 text-slate-900 dark:text-white"
+              >
+                {statusOptions.map(status => (
+                  <option key={status.value} value={status.value}>
+                    {status.label}
+                  </option>
+                ))}
+              </select>
+            </div>
+
             {/* Sort */}
             <div className="lg:w-48">
               <select
@@ -409,12 +558,28 @@ export default function EventsPage() {
 
         {/* Results Info */}
         <div className="flex justify-between items-center mb-8">
-          <p className="text-slate-600 dark:text-slate-300">
-            {useBlockchainData 
-              ? `${filteredEventAddresses.length} event${filteredEventAddresses.length !== 1 ? 's' : ''} found`
-              : `${filteredEvents.length} event${filteredEvents.length !== 1 ? 's' : ''} found`
-            }
-          </p>
+          <div className="flex items-center space-x-4">
+            <p className="text-slate-600 dark:text-slate-300">
+              {useBlockchainData 
+                ? `${filteredEventAddresses.length} event${filteredEventAddresses.length !== 1 ? 's' : ''} found`
+                : `${filteredEvents.length} event${filteredEvents.length !== 1 ? 's' : ''} found`
+              }
+            </p>
+            {!useBlockchainData && (
+              <div className="flex items-center space-x-2 text-sm">
+                <span className="text-slate-500 dark:text-slate-400">Status:</span>
+                <span className="px-2 py-1 bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300 rounded-full text-xs">
+                  {mockEvents.filter(e => getEventStatus(e) === "live").length} Live
+                </span>
+                <span className="px-2 py-1 bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300 rounded-full text-xs">
+                  {mockEvents.filter(e => getEventStatus(e) === "upcoming").length} Upcoming
+                </span>
+                <span className="px-2 py-1 bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-slate-300 rounded-full text-xs">
+                  {mockEvents.filter(e => getEventStatus(e) === "past").length} Past
+                </span>
+              </div>
+            )}
+          </div>
           <div className="flex items-center space-x-2">
             <span className="text-sm text-slate-600 dark:text-slate-400">View:</span>
             <button className="p-2 rounded-lg bg-black/10 dark:bg-black/30 text-black dark:text-white">
@@ -476,6 +641,7 @@ export default function EventsPage() {
                 onClick={() => {
                   setSearchQuery("")
                   setSelectedCategory("all")
+                  setSelectedStatus("all")
                 }}
                 className="px-6 py-3 bg-primary-gradient text-white rounded-lg bg-primary-gradient-hover transition-all duration-200 font-medium"
               >

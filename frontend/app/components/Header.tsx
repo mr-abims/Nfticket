@@ -9,7 +9,7 @@ export function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
 
   return (
-    <header className="sticky top-0 z-50 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border-b border-slate-200 dark:border-slate-700">
+    <header className="sticky top-0 z-50 backdrop-blur-md border-b border-slate-200 dark:border-slate-700" style={{ backgroundColor: '#010612' }}>
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-20">
           {/* Logo */}
@@ -24,7 +24,7 @@ export function Header() {
                 style={{ width: '40px', height: '40px' }}
               />
             </div>
-            <span className="text-2xl font-bold text-slate-900 dark:text-white">
+            <span className="text-2xl font-bold text-white">
               Ticketify
             </span>
           </Link>
@@ -33,19 +33,19 @@ export function Header() {
           <nav className="hidden md:flex items-center space-x-8">
             <Link
               href="/events"
-              className="text-slate-600 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white transition-colors font-medium text-lg"
+              className="text-slate-300 hover:text-white transition-colors font-medium text-lg"
             >
               Events
             </Link>
             <Link
               href="/create-event"
-              className="text-slate-600 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white transition-colors font-medium text-lg"
+              className="text-slate-300 hover:text-white transition-colors font-medium text-lg"
             >
               Create Event
             </Link>
             <Link
               href="/dashboard"
-              className="text-slate-600 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white transition-colors font-medium text-lg"
+              className="text-slate-300 hover:text-white transition-colors font-medium text-lg"
             >
               Dashboard
             </Link>
@@ -61,7 +61,7 @@ export function Header() {
             {/* Mobile Menu Button */}
             <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="md:hidden p-3 rounded-md text-slate-600 hover:text-slate-900 hover:bg-slate-100 dark:text-slate-300 dark:hover:text-white dark:hover:bg-slate-800"
+              className="md:hidden p-3 rounded-md text-slate-300 hover:text-white hover:bg-slate-800"
             >
               <svg
                 className="w-7 h-7"
@@ -91,25 +91,25 @@ export function Header() {
 
         {/* Mobile Menu */}
         {isMenuOpen && (
-          <div className="md:hidden py-6 border-t border-slate-200 dark:border-slate-700">
+          <div className="md:hidden py-6 border-t border-slate-700">
             <nav className="flex flex-col space-y-5">
               <Link
                 href="/events"
-                className="text-slate-600 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white transition-colors font-medium text-lg py-2"
+                className="text-slate-300 hover:text-white transition-colors font-medium text-lg py-2"
                 onClick={() => setIsMenuOpen(false)}
               >
                 Events
               </Link>
               <Link
                 href="/create-event"
-                className="text-slate-600 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white transition-colors font-medium text-lg py-2"
+                className="text-slate-300 hover:text-white transition-colors font-medium text-lg py-2"
                 onClick={() => setIsMenuOpen(false)}
               >
                 Create Event
               </Link>
               <Link
                 href="/dashboard"
-                className="text-slate-600 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white transition-colors font-medium text-lg py-2"
+                className="text-slate-300 hover:text-white transition-colors font-medium text-lg py-2"
                 onClick={() => setIsMenuOpen(false)}
               >
                 Dashboard

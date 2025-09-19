@@ -286,8 +286,10 @@ function DashboardContent() {
     }
   }, [successMessage, refetchTickets, refetchTicketCount])
 
+
   // Real-time event listeners for dashboard updates
   useWatchEventCreated((log) => {
+    console.log('Event created detected:', log)
     const activity: Activity = {
       id: `event-${log.transactionHash}-${log.logIndex}`,
       type: 'event_created',
@@ -305,6 +307,7 @@ function DashboardContent() {
 
   // Listen for global ticket purchases
   useWatchTicketPurchased((log) => {
+    console.log('Ticket purchased detected:', log)
     const activity: Activity = {
       id: `ticket-${log.transactionHash}-${log.logIndex}`,
       type: 'ticket_purchased',
@@ -428,7 +431,7 @@ function DashboardContent() {
   if (!isConnected) {
     return (
       <ErrorBoundary>
-        <div className="min-h-screen relative overflow-hidden bg-black">
+        <div className="min-h-screen relative overflow-hidden" style={{ backgroundColor: '#010612' }}>
           {/* Background decoration */}
           <div className="absolute inset-0 bg-gradient-to-r from-black/10 to-purple-600/10 dark:from-black/20 dark:to-purple-400/10"></div>
           <div className="absolute top-0 right-0 -translate-y-12 translate-x-12 w-96 h-96 bg-gradient-to-r from-black/30 to-purple-400 rounded-full blur-3xl opacity-20"></div>
@@ -460,7 +463,7 @@ function DashboardContent() {
 
   return (
     <ErrorBoundary>
-      <div className="min-h-screen relative overflow-hidden bg-black">
+      <div className="min-h-screen relative overflow-hidden" style={{ backgroundColor: '#010612' }}>
         {/* Background decoration */}
         <div className="absolute inset-0 bg-gradient-to-r from-black/10 to-purple-600/10 dark:from-black/20 dark:to-purple-400/10"></div>
         <div className="absolute top-0 right-0 -translate-y-12 translate-x-12 w-96 h-96 bg-gradient-to-r from-black/30 to-purple-400 rounded-full blur-3xl opacity-20"></div>
@@ -577,127 +580,93 @@ function DashboardContent() {
         </div>
 
         {/* User Info Card */}
-        <div className="bg-primary-gradient rounded-2xl p-8 mb-8 text-white relative overflow-hidden">
-          {/* Subtle background pattern */}
-          <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent"></div>
-          <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -translate-y-16 translate-x-16"></div>
-          
+        <div className="bg-gradient-to-r from-gray-900 via-purple-900 to-gray-800 rounded-2xl p-8 mb-8 relative overflow-hidden">
           <div className="relative">
             <div className="flex flex-col md:flex-row md:items-center md:justify-between">
               <div className="flex-1">
-                <div className="flex items-center space-x-3 mb-3">
-                  <div className="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center">
-                    <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                    </svg>
-                  </div>
+                {/* Welcome Back Title */}
+                <h2 className="text-4xl font-bold text-purple-200 mb-4">Welcome Back !</h2>
+                
+                {/* Wallet Address */}
+                <p className="text-gray-300 text-sm mb-6">
+                  Wallet Address: {shortenAddress(address || '0x...')}
+                </p>
+                
+                {/* Stats Grid */}
+                <div className="grid grid-cols-3 gap-6 mb-6">
                   <div>
-                    <h2 className="text-2xl font-bold">Welcome back!</h2>
-                    <p className="text-white/80 text-sm">
-                      {new Date().toLocaleDateString('en-US', { 
-                        weekday: 'long', 
-                        year: 'numeric', 
-                        month: 'long', 
-                        day: 'numeric' 
-                      })}
-                    </p>
-                  </div>
-                </div>
-                
-                <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4 mb-4">
-                  <div className="flex items-center space-x-2 mb-2">
-                    <svg className="w-4 h-4 text-white/70" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" />
-                    </svg>
-                    <span className="text-white/90 text-sm font-medium">Wallet Address</span>
-                  </div>
-                  <p className="text-white font-mono text-sm bg-black/20 rounded-lg px-3 py-2 inline-block">
-                    {shortenAddress(address || '0x...')}
-                  </p>
-                </div>
-                
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                  <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4">
-                    <div className="flex items-center space-x-2 mb-2">
+                    <div className="flex items-center space-x-2 mb-1">
                       <svg className="w-4 h-4 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1" />
                       </svg>
-                      <span className="text-white/90 text-sm font-medium">Balance</span>
+                      <p className="text-gray-300 text-sm">Balance</p>
                     </div>
-                    {useBlockchainData ? (
-                      isLoadingBalance ? (
-                        <div className="flex items-center">
-                          <svg className="animate-spin h-4 w-4 mr-2" viewBox="0 0 24 24">
-                            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none"/>
-                            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 714 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"/>
-                          </svg>
-                          <span className="text-lg font-bold">Loading...</span>
-                        </div>
-                      ) : (
-                        <div>
-                          <p className="text-2xl font-bold">{Number(userBalance).toFixed(4)} STT</p>
-                          <p className="text-xs text-white/70">Available to spend</p>
-                        </div>
-                      )
-                    ) : (
-                      <div>
-                        <p className="text-2xl font-bold">--</p>
-                        <p className="text-xs text-white/70">Connect wallet</p>
-                      </div>
-                    )}
-                  </div>
-                  
-                  <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4">
-                    <div className="flex items-center space-x-2 mb-2">
-                      <svg className="w-4 h-4 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                      </svg>
-                      <span className="text-white/90 text-sm font-medium">Events Created</span>
-                    </div>
-                    <p className="text-2xl font-bold">
-                      {useBlockchainData ? (userCreatedEvents?.length || 0) : '--'}
-                    </p>
-                    <p className="text-xs text-white/70">Total events</p>
-                  </div>
-                  
-                  <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4">
-                    <div className="flex items-center space-x-2 mb-2">
-                      <svg className="w-4 h-4 text-orange-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 5v2m0 4v2m0 4v2M5 5a2 2 0 00-2 2v3a2 2 0 110 4v3a2 2 0 002 2h14a2 2 0 002-2v-3a2 2 0 110-4V7a2 2 0 00-2-2H5z" />
-                      </svg>
-                      <span className="text-white/90 text-sm font-medium">Tickets Owned</span>
-                    </div>
-                    <p className="text-2xl font-bold">
-                      {useBlockchainData ? 
-                        (isLoadingTickets ? (
+                    <p className="text-2xl font-bold text-purple-200">
+                      {useBlockchainData ? (
+                        isLoadingBalance ? (
                           <span className="flex items-center">
-                            <svg className="animate-spin h-5 w-5 mr-2" viewBox="0 0 24 24">
+                            <svg className="animate-spin h-4 w-4 mr-2" viewBox="0 0 24 24">
                               <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none"/>
                               <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 714 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"/>
                             </svg>
-                            ...
+                            Loading...
+                          </span>
+                        ) : (
+                          `${Number(userBalance).toFixed(1)} STT`
+                        )
+                      ) : (
+                        '-- STT'
+                      )}
+                    </p>
+                  </div>
+                  
+                  <div>
+                    <div className="flex items-center space-x-2 mb-1">
+                      <svg className="w-4 h-4 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                      </svg>
+                      <p className="text-gray-300 text-sm">Event Created</p>
+                    </div>
+                    <p className="text-2xl font-bold text-purple-200">
+                      {useBlockchainData ? (userCreatedEvents?.length || 0) : '--'}
+                    </p>
+                  </div>
+                  
+                  <div>
+                    <div className="flex items-center space-x-2 mb-1">
+                      <svg className="w-4 h-4 text-orange-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 5v2m0 4v2m0 4v2M5 5a2 2 0 00-2 2v3a2 2 0 110 4v3a2 2 0 002 2h14a2 2 0 002-2v-3a2 2 0 110-4V7a2 2 0 00-2-2H5z" />
+                      </svg>
+                      <p className="text-gray-300 text-sm">Ticket Owned</p>
+                    </div>
+                    <p className="text-2xl font-bold text-purple-200">
+                      {useBlockchainData ? 
+                        (isLoadingTickets ? (
+                          <span className="flex items-center">
+                            <svg className="animate-spin h-4 w-4 mr-2" viewBox="0 0 24 24">
+                              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none"/>
+                              <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 714 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"/>
+                            </svg>
+                            Loading...
                           </span>
                         ) : (userTicketCount || 0)) : '--'
                       }
                     </p>
-                    <p className="text-xs text-white/70">In your collection</p>
                   </div>
                 </div>
               </div>
               
-              <div className="mt-6 md:mt-0 md:ml-8">
+              {/* Create Event Button */}
+              <div className="mt-6 md:mt-0 md:ml-8 flex justify-center md:justify-end">
                 <Link
                   href="/create-event"
-                  className="inline-flex items-center px-6 py-3 bg-white text-purple-600 rounded-xl hover:bg-purple-50 hover:scale-105 transition-all duration-200 font-medium shadow-lg hover:shadow-xl"
+                  className="inline-flex items-center px-6 py-3 bg-white text-black rounded-xl hover:bg-gray-100 transition-all duration-200 font-medium shadow-lg hover:shadow-xl"
                 >
-                  <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  Create Event
+                  <svg className="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
                   </svg>
-                  Create Event
                 </Link>
-                <p className="text-white/70 text-xs mt-2 text-center">
-                  Launch your next event
-                </p>
               </div>
             </div>
           </div>
@@ -806,7 +775,18 @@ function DashboardContent() {
 
                 {/* Recent Activity */}
                 <div>
-                  <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-6">Recent Activity</h3>
+                  <div className="flex items-center justify-between mb-6">
+                    <h3 className="text-xl font-bold text-slate-900 dark:text-white">Recent Activity</h3>
+                    {useBlockchainData && (
+                      <div className="flex items-center space-x-2">
+                        <div className={`w-2 h-2 rounded-full ${recentActivity.length > 0 ? 'bg-green-500 animate-pulse' : 'bg-gray-400'}`}></div>
+                        <span className="text-xs text-slate-500 dark:text-slate-400">
+                          {recentActivity.length > 0 ? 'Live updates active' : 'Waiting for activity'}
+                        </span>
+                      </div>
+                    )}
+                  </div>
+                  
                   {useBlockchainData && recentActivity.length > 0 ? (
                     <div className="space-y-4">
                       {recentActivity.map((activity) => (
@@ -856,8 +836,14 @@ function DashboardContent() {
                       <svg className="w-16 h-16 text-slate-400 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
                       </svg>
-                      <p className="text-slate-600 dark:text-slate-300">
-                        {useBlockchainData ? "No recent activity. Activity will appear here as events are created and tickets are purchased." : "Activity tracking coming soon."}
+                      <p className="text-slate-600 dark:text-slate-300 mb-2">
+                        {useBlockchainData ? "No recent activity yet" : "Connect your wallet to see live activity"}
+                      </p>
+                      <p className="text-sm text-slate-500 dark:text-slate-400">
+                        {useBlockchainData 
+                          ? "Activity will appear here as events are created and tickets are purchased on the blockchain" 
+                          : "Recent blockchain activity will be displayed here once you connect your wallet"
+                        }
                       </p>
                     </div>
                   )}
