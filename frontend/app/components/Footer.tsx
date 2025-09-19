@@ -21,7 +21,7 @@ export function Footer() {
               <span className="text-xl font-bold">Ticketify</span>
             </Link>
             <p className="text-slate-300 text-sm leading-relaxed">
-              The future of event management powered by blockchain technology. 
+              Seamless event management system powered by blockchain technology. 
               Secure, transparent, and decentralized ticketing for everyone.
             </p>
             <div className="flex space-x-4">

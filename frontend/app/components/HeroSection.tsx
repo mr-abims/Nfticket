@@ -26,11 +26,11 @@ export function HeroSection() {
 
           {/* Main heading */}
           <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white mb-6 leading-tight">
-            The Future of{" "}
+            Your Gateway{" "}
             <span className="hero-gradient">
-              Event Management
+              To Seamless Event 
             </span>{" "}
-            is Here
+            Experience
           </h1>
 
           {/* Subheading */}
