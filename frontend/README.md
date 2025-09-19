@@ -1,6 +1,6 @@
 # Ticketify - Decentralized Event Management System
 
-A modern, blockchain-powered event management platform built with Next.js 15, TypeScript, and Tailwind CSS. Ticketify enables users to create, discover, and attend events with complete transparency and security through blockchain technology.
+A modern, blockchain-powered event management platform built with Next.js, TypeScript, Solidity, and Tailwind CSS. Ticketify enables users to create, discover, and attend events with complete transparency and security through blockchain technology.
 
 ## 🚀 Features
 
@@ -11,65 +11,52 @@ A modern, blockchain-powered event management platform built with Next.js 15, Ty
 - **User Dashboard**: Comprehensive dashboard for event organizers and attendees
 - **Blockchain Integration**: Built-in Web3 wallet connectivity and smart contract interactions
 
-### 🎨 Design Features
-- **Modern UI/UX**: Beautiful, responsive design with dark mode support
-- **Gradient Animations**: Smooth animations and transitions throughout the app
-- **Mobile-First**: Fully responsive design that works on all devices
-- **Accessibility**: WCAG compliant with proper semantic HTML and ARIA labels
-
 ### 🔧 Technical Features
 - **Next.js 15**: Latest Next.js with App Router and React Server Components
 - **TypeScript**: Full type safety throughout the application
-- **Tailwind CSS 4**: Modern utility-first CSS framework
-- **Web3 Integration**: Ready for RainbowKit, Wagmi, and Viem integration
-- **Performance Optimized**: Image optimization, code splitting, and caching
+- **Tailwind CSS 4**: Modern CSS framework
+- **Web3 Integration**:RainbowKit, Wagmi, and Viem integration
+
 
 ## 🏗️ Project Structure
 
 ```
 frontend/
 ├── app/
-│   ├── components/          # Reusable UI components
-│   │   ├── Header.tsx       # Navigation header with wallet connection
-│   │   ├── Footer.tsx       # Site footer
-│   │   ├── HeroSection.tsx  # Landing page hero
-│   │   ├── FeaturesSection.tsx # Features showcase
-│   │   ├── EventsPreview.tsx   # Event preview section
-│   │   ├── StatsSection.tsx    # Platform statistics
-│   │   └── EventCard.tsx       # Event card component
-│   ├── events/              # Event-related pages
-│   │   ├── page.tsx         # Events listing page
-│   │   └── [id]/page.tsx    # Event detail page
-│   ├── create-event/        # Event creation
-│   │   └── page.tsx         # Event creation form
-│   ├── dashboard/           # User dashboard
-│   │   └── page.tsx         # Dashboard with tabs
-│   ├── lib/                 # Utility functions
-│   │   └── utils.ts         # Common utilities
-│   ├── types/               # TypeScript type definitions
-│   │   └── event.ts         # Event-related types
-│   ├── layout.tsx           # Root layout component
-│   ├── page.tsx             # Landing page
-│   └── globals.css          # Global styles
-├── public/                  # Static assets
-└── package.json             # Dependencies and scripts
+│   ├── components/                        # UI components
+│   │   ├── ConnectButton.tsx             # Wallet connection
+│   │   ├── EventCard.tsx                 # Event display
+│   │   ├── EventCreationModal.tsx        # Event creation
+│   │   ├── Header.tsx                    # Navigation
+│   │   ├── HeroSection.tsx               # Landing hero
+│   │   └── ...                           # Other components
+│   ├── contracts/                        # Smart contract integration
+│   │   ├── abis/                         # Contract ABIs
+│   │   └── config.ts                     # Contract addresses
+│   ├── events/                           # Event pages
+│   │   ├── [id]/page.tsx                 # Event detail
+│   │   └── page.tsx                      # Events listing
+│   ├── create-event/page.tsx             # Event creation
+│   ├── dashboard/page.tsx                # User dashboard
+│   ├── hooks/                            # Custom hooks
+│   ├── lib/                              # Utilities
+│   ├── types/                            # TypeScript types
+│   ├── layout.tsx                        # Root layout
+│   └── page.tsx                          # Landing page
+├── public/                                # Static assets
+├── next.config.ts                         # Next.js config
+├── package.json                           # Dependencies
+├── tsconfig.json                          # TypeScript config
+├── wagmi.config.ts                        # Web3 config
+└── README.md                              # Documentation
 ```
 
-## 🛠️ Tech Stack
 
-### Frontend
-- **Framework**: Next.js 15 (React 19)
-- **Language**: TypeScript
-- **Styling**: Tailwind CSS 4
-- **UI Components**: Custom components with Headless UI
-- **Icons**: Lucide React
-- **Animations**: Framer Motion
-
-### Web3 Integration (Ready)
+### Web3 Integration
 - **Wallet Connection**: RainbowKit
 - **Ethereum Interaction**: Wagmi + Viem
 - **State Management**: TanStack React Query
-- **Supported Networks**: Ethereum, Polygon, Arbitrum, Optimism
+- **Supported Networks**: Somnia
 
 ## 🚀 Getting Started
 
@@ -111,13 +98,6 @@ npm run build
 # Start production server
 npm start
 
-# Type checking
-npx tsc --noEmit
-
-# Linting
-npx next lint
-```
-
 ## 📱 Pages Overview
 
 ### 🏠 Landing Page (`/`)
@@ -132,17 +112,16 @@ npx next lint
 - Category filtering (Conference, Concert, Workshop, etc.)
 - Sorting options (Date, Price, Popularity, Availability)
 - Grid and list view options
-- Real-time availability indicators
+- Real time availability indicators
 
 ### 📝 Event Detail Page (`/events/[id]`)
 - Complete event information with image gallery
-- Speaker profiles and event agenda
 - Interactive ticket purchasing interface
 - Availability tracking and pricing
 - Smart contract information display
 
 ### ✨ Create Event Page (`/create-event`)
-- Multi-step event creation wizard
+- Multi-step event creation 
 - Form validation and image preview
 - Real-time event summary
 - Blockchain integration ready
@@ -158,7 +137,7 @@ npx next lint
 ## 🎨 Design System
 
 ### Color Palette
-- **Primary**: Blue to Purple gradient (`from-blue-600 to-purple-600`)
+- **Primary**: Black to Purple gradient 
 - **Secondary**: Slate tones for text and backgrounds
 - **Accent Colors**: Green (success), Red (error), Orange (warning)
 
@@ -186,7 +165,6 @@ The application is prepared for Web3 integration with:
 
 ### Wallet Integration
 - MetaMask, WalletConnect
-- Network switching capabilities
 - Balance checking and transaction handling
 - Gas estimation and optimization
 
@@ -196,10 +174,12 @@ The application is prepared for Web3 integration with:
 - [ ] Advanced analytics and reporting
 - [ ] Secondary marketplace for ticket resales
 - [ ] Social features and event reviews
+- [ ] ZKVerify
+
 
 ### Phase 3 Features
 - [ ] Mobile app development
-- [ ] Multi-language support
+- [ ] Multi-blockchain support
 - [ ] Advanced event streaming integration
 - [ ] DAO governance features
 - [ ] Cross-chain compatibility
@@ -211,12 +191,3 @@ The application is prepared for Web3 integration with:
 3. Commit your changes (`git commit -m 'Add amazing feature'`)
 4. Push to the branch (`git push origin feature/amazing-feature`)
 5. Open a Pull Request
-
-## 📄 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-
----
-
-**Built with ❤️ for the decentralized future of events**
