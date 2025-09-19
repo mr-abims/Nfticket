@@ -12,7 +12,6 @@ The Ticketify platform is built using a factory pattern with the following core 
 
 1. **EventFactory** - Central contract for creating and managing events
 2. **EventManager** - Individual event contracts that handle ticket sales and management
-3. **NFTMinter** - NFT contract for ticket minting (currently unused in favor of EventManager's built-in ERC721)
 
 ## Smart Contracts
 
@@ -135,14 +134,6 @@ function endEvent() public
 - `EventEnded`: Emitted when an event is ended
 - `TicketTransferred`: Emitted when a ticket is transferred
 
-### 3. NFTMinter Contract
-
-A standalone NFT contract for minting tickets (currently not used in the main implementation as EventManager includes ERC721 functionality).
-
-#### Features:
-- **ERC721 Implementation**: Standard NFT functionality
-- **Minting**: Safe minting with URI setting
-- **Ownership**: Ownable pattern for access control
 
 ## Testing Framework
 
@@ -220,30 +211,6 @@ forge build
 
 # Format code
 forge fmt
-
-# Generate gas snapshots
-forge snapshot
-```
-
-### Deployment Scripts
-
-The project includes deployment scripts in the `script/` directory:
-
-```bash
-# Deploy to local network
-forge script script/Counter.s.sol:CounterScript --rpc-url http://localhost:8545
-
-# Deploy to Somnia
-forge script script/Counter.s.sol:CounterScript --rpc-url <testnet_rpc_url> --private-key <private_key>
-
-### Local Development
-
-```bash
-# Start local blockchain
-anvil
-
-# Run tests against local network
-forge test --fork-url http://localhost:8545
 ```
 
 ## Security Considerations
@@ -258,15 +225,6 @@ forge test --fork-url http://localhost:8545
 - **Name Uniqueness**: Prevents duplicate event names
 - **Capacity Limits**: Enforces maximum ticket limits
 - **Payment Validation**: Ensures correct payment amounts
-
-### Reentrancy Protection
-- **Safe Minting**: Uses `_safeMint` for NFT creation
-- **External Calls**: Limited external calls to prevent reentrancy
-
-### Gas Optimization
-- **Efficient Storage**: Optimized storage patterns
-- **Batch Operations**: Efficient array operations
-- **Event Filtering**: Gas-efficient event categorization
 
 ## Usage Examples
 
@@ -325,21 +283,6 @@ EventManager[] memory liveEvents = eventFactory.getLiveEvents();
 // Get user's tickets
 UserTicket[] memory userTickets = eventFactory.getUserAllTickets(userAddress);
 ```
-
-## Dependencies
-
-- **OpenZeppelin Contracts**: ^0.8.20
-  - ERC721 for NFT functionality
-  - ERC721URIStorage for metadata
-  - Ownable for access control
-
-## Development Tools
-
-- **Foundry**: Development framework
-- **Forge**: Testing and building
-- **Anvil**: Local blockchain
-- **Cast**: Contract interaction
-- **Chisel**: Solidity REPL
 
 
 # Frontend Integration Guide
@@ -421,20 +364,6 @@ frontend/
 └── README.md
 
 
-## 🎯 Future Enhancements
-
-### Phase 2 Features
-- [ ] Advanced analytics and reporting
-- [ ] Secondary marketplace for ticket resales
-- [ ] Social features and event reviews
-- [ ] ZKVerify
-
-### Phase 3 Features
-- [ ] Mobile app development
-- [ ] Multi-blockchain support
-- [ ] Advanced event streaming integration
-- [ ] DAO governance features
-- [ ] Cross-chain compatibility
 
 ## 🤝 Contributing
 
