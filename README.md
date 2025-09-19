@@ -2,9 +2,189 @@
 
 ## Overview
 
-Ticketify is a decentralized event ticketing platform built on Somnia that allows users to create, manage, and purchase event tickets as NFTs. The platform consists of three main smart contracts that work together to provide a comprehensive ticketing solution.
+Ticketify is a decentralized event ticketing platform built on Somnia that allows users to create, manage, and purchase event tickets as NFTs. The platform consists of two main smart contracts that work together to provide a comprehensive ticketing solution.
 
+## 🌐 Live Application
 
+**🎫 [Try Ticketify Now - https://ticketify-phi.vercel.app/](https://ticketify-phi.vercel.app/)**
+
+### 🚀 Getting Started is Easy
+
+1. **Connect Wallet** → 2. **Browse Events** → 3. **Create or Purchase tickets** 
+
+### What You Can Do Right Now
+
+- ✅ **Browse Events**: View all available events on the platform
+- ✅ **Create Events**: Deploy your own event contracts with custom details
+- ✅ **Purchase Tickets**: Buy NFT tickets for any event
+- ✅ **Manage Dashboard**: Track your events and ticket sales
+- ✅ **Transfer Tickets**: Send tickets to other users
+- ✅ **View NFT Metadata**: See ticket details stored on IPFS
+
+### Quick Access Links
+
+- **Homepage**: [https://ticketify-phi.vercel.app/](https://ticketify-phi.vercel.app/)
+- **Create Event**: [https://ticketify-phi.vercel.app/create-event](https://ticketify-phi.vercel.app/create-event)
+- **Dashboard**: [https://ticketify-phi.vercel.app/dashboard](https://ticketify-phi.vercel.app/dashboard)
+- **All Events**: [https://ticketify-phi.vercel.app/events](https://ticketify-phi.vercel.app/events)
+
+### 🎯 Ticketify Features
+
+- **🎫 NFT Tickets**: Each ticket is a unique ERC-721 token
+- **🏭 Factory Pattern**: Dynamic event contract creation
+- **💰 Payment Support**: Both free and paid events
+- **📱 Responsive Design**: Works on desktop and mobile
+- **🔗 IPFS Integration**: Decentralized metadata storage
+- **📊 Real-time Dashboard**: Live event and ticket tracking
+- **🔄 Ticket Transfers**: Send tickets to other users
+- **🌐 Multi-wallet Support**: MetaMask and WalletConnect
+
+```mermaid
+sequenceDiagram
+    participant U as 👤 User
+    participant F as ⚛️ Frontend
+    participant P as 📁 Pinata
+    participant EF as 🏭 EventFactory
+    participant EM as 🎫 EventManager
+    participant S as 🌐 Somnia Blockchain
+    
+    Note over U,S: Event Creation Flow
+    U->>F: Create Event Form
+    F->>P: Upload Event Image
+    P-->>F: Return IPFS Hash
+    F->>P: Upload Metadata JSON
+    P-->>F: Return Metadata Hash
+    F->>EF: createEvent() with IPFS hash
+    EF->>EM: Deploy new EventManager
+    EM-->>EF: Return contract address
+    EF-->>F: Event created successfully
+    F-->>U: Event deployed & ready
+    
+    Note over U,S: Ticket Purchase Flow
+    U->>F: Click "Register for Event"
+    F->>EM: registerForEvent() with payment
+    EM->>EM: Mint NFT ticket
+    EM->>EF: recordTicketPurchase()
+    EM-->>F: Transaction successful
+    F-->>U: NFT ticket received
+    
+    Note over U,S: Ticket Transfer Flow
+    U->>F: Transfer ticket to friend
+    F->>EM: transferTicket(to, tokenId)
+    EM->>EM: Transfer NFT ownership
+    EM-->>F: Transfer successful
+    F-->>U: Ticket transferred
+```
+
+## 🛠️ Development Setup
+
+### Prerequisites for Local Development
+
+- **Node.js 18+** - [Download here](https://nodejs.org/)
+- **MetaMask Wallet** - [Install extension](https://metamask.io/)
+- **Foundry** - [Install here](https://book.getfoundry.sh/getting-started/installation)
+
+### Local Development Setup
+
+1. **Clone the Repository**
+
+```bash
+git clone https://github.com/your-username/Ticketify.git
+cd Ticketify
+```
+
+2. **Install Dependencies**
+
+```bash
+# Install smart contract dependencies
+forge install
+
+# Install frontend dependencies
+cd frontend
+npm install
+```
+
+3. **Configure Environment**
+
+```bash
+# Create environment file
+cp frontend/.env.example frontend/.env.local
+
+# Add your Pinata API keys (see IPFS Integration section)
+# Add your WalletConnect Project ID (optional)
+```
+
+4. **Start Development Server**
+
+```bash
+cd frontend
+npm run dev
+```
+
+### Building and Testing
+
+```bash
+# Build smart contracts
+forge build
+
+# Run tests
+forge test
+
+# Run tests with verbose output
+forge test -vvv
+
+# Format code
+forge fmt
+```
+
+### Contract Addresses
+
+**Deployed Contracts on Somnia Testnet:**
+
+- **EventFactory**: `0x70068bC17cb22ad28A2E2df5821d3f4Bf839a800`
+- **EventManager**: Dynamically created for each event
+
+## 📁 IPFS Integration
+
+Ticketify uses IPFS to store event metadata using **Pinata** as the IPFS pinning service.
+
+#### Pinata Features Used
+
+- **File Upload**: Upload event images and metadata
+- **JSON Metadata**: Store structured ticket information
+- **Pinning**: Ensure files remain accessible
+- **Gateway Access**: Fast retrieval via Pinata's CDN
+
+### Metadata Structure
+
+Each event ticket includes the following metadata structure:
+
+```json
+{
+  "name": "Blockchain Conference 2024",
+  "description": "Annual blockchain technology conference",
+  "image": "ipfs://QmYourImageHash",
+  "attributes": [
+    {
+      "trait_type": "Event Type",
+      "value": "Conference"
+    },
+    {
+      "trait_type": "Date",
+      "value": "2024-03-15"
+    },
+    {
+      "trait_type": "Location",
+      "value": "San Francisco, CA"
+    },
+    {
+      "trait_type": "Ticket Tier",
+      "value": "General Admission"
+    }
+  ],
+  "external_url": "https://ticketify.app/events/your-event-id"
+}
+```
 
 ## Smart Contract Architecture
 
@@ -20,6 +200,7 @@ The Ticketify platform is built using a factory pattern with the following core 
 The EventFactory is the central hub that manages all events in the platform. It acts as a factory contract that creates individual EventManager contracts for each event.
 
 #### Key Features:
+
 - **Event Creation**: Creates new EventManager contracts for events
 - **Global Event Tracking**: Maintains a registry of all events
 - **User Management**: Tracks events created by users
@@ -29,6 +210,7 @@ The EventFactory is the central hub that manages all events in the platform. It 
 #### Core Functions:
 
 ##### Event Creation
+
 ```solidity
 function createEvent(
     string memory _eventName,
@@ -42,8 +224,9 @@ function createEvent(
 ```
 
 **Parameters:**
+
 - `_eventName`: Unique name for the event
-- `_eventAcronym`: Short identifier for the event
+- `_eventAcronym`: Short identifier for the event(This will be used for the NFT Creation)
 - `_regStartTime`: Unix timestamp when registration starts
 - `_regEndTime`: Unix timestamp when registration ends
 - `_ticketFee`: Cost per ticket (0 for free events)
@@ -53,6 +236,7 @@ function createEvent(
 **Returns:** Address of the created EventManager contract
 
 ##### Event Retrieval
+
 ```solidity
 function getAllEvents() external view returns (address[] memory)
 function getLiveEvents() external view returns (EventManager[] memory)
@@ -61,6 +245,7 @@ function getEventContractByName(string memory eventName) external view returns (
 ```
 
 ##### User Management
+
 ```solidity
 function getUserCreatedEvents(address user) external view returns (EventManager[] memory)
 function getUserEventCount(address user) external view returns (uint256)
@@ -68,12 +253,14 @@ function getUserAllTickets(address user) external view returns (UserTicket[] mem
 ```
 
 ##### Ticket Tracking
+
 ```solidity
 function recordTicketPurchase(address user, uint256 tokenId, string memory eventName) external
 function getUserTicketsForEvent(address user, address eventContract) external view returns (uint256[] memory)
 ```
 
 #### Events:
+
 - `EventCreated`: Emitted when a new event is created
 - `TicketPurchased`: Emitted when a ticket is purchased
 
@@ -82,6 +269,7 @@ function getUserTicketsForEvent(address user, address eventContract) external vi
 Each event has its own EventManager contract that handles ticket sales, registration, and management for that specific event.
 
 #### Key Features:
+
 - **ERC721 NFT Tickets**: Each ticket is a unique NFT
 - **Registration Management**: Time-based registration windows
 - **Payment Handling**: Supports both free and paid events
@@ -91,6 +279,7 @@ Each event has its own EventManager contract that handles ticket sales, registra
 #### Core Functions:
 
 ##### Event Information
+
 ```solidity
 function getEventInfo() public view returns (
     string memory _eventName,
@@ -106,23 +295,27 @@ function getEventInfo() public view returns (
 ```
 
 ##### Registration
+
 ```solidity
 function registerForEvent() public payable
 ```
 
 **Requirements:**
+
 - Event must not be ended
 - Current time must be within registration window
 - Event must not be sold out
 - Correct payment amount (if ticket fee required)
 
 ##### Ticket Management
+
 ```solidity
 function transferTicket(address to, uint256 tokenId) public
 function getUserTickets(address user) public view returns (uint256[] memory)
 ```
 
 ##### Event Status
+
 ```solidity
 function isEventLive() public view returns (bool)
 function isEventPast() public view returns (bool)
@@ -130,10 +323,10 @@ function endEvent() public
 ```
 
 #### Events:
+
 - `UserRegistered`: Emitted when a user registers for an event
 - `EventEnded`: Emitted when an event is ended
 - `TicketTransferred`: Emitted when a ticket is transferred
-
 
 ## Testing Framework
 
@@ -144,6 +337,7 @@ The project uses Foundry for testing with comprehensive test coverage.
 The test suite (`test/EventManager.t.sol`) covers:
 
 #### Core Functionality Tests:
+
 - **Event Creation**: Tests event creation through factory
 - **Registration**: Tests user registration for events
 - **Ticket Transfers**: Tests ticket transfer functionality
@@ -151,12 +345,14 @@ The test suite (`test/EventManager.t.sol`) covers:
 - **Event Lifecycle**: Tests event start, end, and status
 
 #### Factory Tests:
+
 - **Multiple Event Creation**: Tests creating multiple events
 - **User Management**: Tests user event tracking
 - **Event Categorization**: Tests live/past event separation
 - **Name Uniqueness**: Tests event name uniqueness enforcement
 
 #### Edge Cases:
+
 - **Time-based Registration**: Tests registration window enforcement
 - **Sold Out Events**: Tests capacity limits
 - **Event Ending**: Tests event lifecycle management
@@ -180,6 +376,7 @@ forge test --gas-report
 ### Test Coverage
 
 The test suite provides comprehensive coverage including:
+
 - ✅ Event creation and management
 - ✅ User registration and ticket purchasing
 - ✅ Ticket transfers and ownership
@@ -190,18 +387,7 @@ The test suite provides comprehensive coverage including:
 
 ## Deployment
 
-### Foundry Configuration
-
 The project uses Foundry for development and deployment:
-
-```toml
-[profile.default]
-src = "src"
-out = "out"
-libs = ["lib"]
-verbose = true
-verbosity = 5
-```
 
 ### Build Commands
 
@@ -213,18 +399,19 @@ forge build
 forge fmt
 ```
 
-## Security Considerations
+#### Deployed Contracts (Somnia Testnet)
 
-### Access Control
-- **Ownable Pattern**: Uses OpenZeppelin's Ownable for access control
-- **Factory Validation**: Only valid event contracts can record ticket purchases
-- **Event Owner Control**: Only event owners can end events
+**EventFactory Contract**
 
-### Input Validation
-- **Time Validation**: Ensures registration times are logical
-- **Name Uniqueness**: Prevents duplicate event names
-- **Capacity Limits**: Enforces maximum ticket limits
-- **Payment Validation**: Ensures correct payment amounts
+- **Address**: `0x70068bC17cb22ad28A2E2df5821d3f4Bf839a800`
+- **Verification**: [View on Block Explorer](https://shannon-explorer.somnia.network/address/0x70068bC17cb22ad28A2E2df5821d3f4Bf839a800)
+- **ABI**: Available in `frontend/app/contracts/abis/EventFactory.json`
+
+**EventManager Contracts**
+
+- **Creation**: Dynamically created for each event
+- **Verification**: Each contract is verified upon creation
+- **ABI**: Available in `frontend/app/contracts/abis/EventManager.json`
 
 ## Usage Examples
 
@@ -283,100 +470,3 @@ EventManager[] memory liveEvents = eventFactory.getLiveEvents();
 // Get user's tickets
 UserTicket[] memory userTickets = eventFactory.getUserAllTickets(userAddress);
 ```
-
-
-# Frontend Integration Guide
-
-### Integration
-
-The smart contracts are designed to work with the Next.js frontend application
-
-### Wallet 
-- MetaMask, WalletConnect
-- Deployed on Somnia blockchain
-- Balance checking and transaction handling
-- Gas estimation and optimization
-
-
-### Data from smart contract
-1. **Contract Addresses**: Deploy contracts and update addresses in `frontend/app/contracts/config.ts`
-2. **ABI Files**: Update ABI files in `frontend/app/contracts/abis/`
-3. **Wagmi Configuration**: Update `frontend/wagmi.config.ts` with contract addresses
-
-### Event Creation Flow
-
-1. User calls `EventFactory.createEvent()` with event details
-2. Factory creates new `EventManager` contract
-3. Factory records event in global registry
-4. Event is immediately available for registration
-
-### Ticket Purchase Flow
-
-1. User calls `EventManager.registerForEvent()` with payment (if required)
-2. Contract mints NFT ticket to user
-3. Contract records purchase in factory for global tracking
-4. User receives NFT ticket with metadata
-
-### Event Management Flow
-
-1. Event owner can call `endEvent()` after registration period
-2. Factory categorizes events as live or past
-3. Users can transfer tickets using `transferTicket()`
-4. Event owner can withdraw funds using `withdraw()`
-
-
-### Tools and Technical Features
-- **Next.js 15**: Latest Next.js with App Router and React Server Components
-- **TypeScript**: Full type safety throughout the application
-- **Tailwind CSS 4**: Modern CSS framework
-- **Web3 Integration**: RainbowKit, Wagmi, and Viem integration
-
-## 🏗️ Folder Structure
-
-```
-frontend/
-├── app/
-│   ├── components/                        # UI components
-│   │   ├── ConnectButton.tsx             # Wallet connection
-│   │   ├── EventCard.tsx                 # Event display
-│   │   ├── EventCreationModal.tsx        # Event creation
-│   │   ├── Header.tsx                    # Navigation
-│   │   ├── HeroSection.tsx               # Landing hero
-│   │   └── ...                           # Other components
-│   ├── contracts/                        # Smart contract integration
-│   │   ├── abis/                         # Contract ABIs
-│   │   └── config.ts                     # Contract addresses
-│   ├── events/                           # Event pages
-│   │   ├── [id]/page.tsx                 # Event detail
-│   │   └── page.tsx                      # Events listing
-│   ├── create-event/page.tsx             # Event creation
-│   ├── dashboard/page.tsx                # User dashboard
-│   ├── hooks/                            # Custom hooks
-│   ├── lib/                              # Utilities
-│   ├── types/                            # TypeScript types
-│   ├── layout.tsx                        # Root layout
-│   └── page.tsx                          # Landing page
-├── public/                                # Static assets
-├── next.config.ts                         # Next.js config
-├── package.json                           # Dependencies
-├── tsconfig.json                          # TypeScript config
-├── wagmi.config.ts                        # Web3 config
-└── README.md
-
-
-
-## 🤝 Contributing
-
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
-
-## 📚 Documentation
-
-- [Foundry Book](https://book.getfoundry.sh/)
-- [OpenZeppelin Contracts](https://docs.openzeppelin.com/contracts/)
-- [ERC-721 Standard](https://eips.ethereum.org/EIPS/eip-721)
-- [Wagmi Documentation](https://wagmi.sh/)
-- [TypeScript Documentation](https://www.typescriptlang.org/docs/)

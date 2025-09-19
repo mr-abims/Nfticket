@@ -3,7 +3,7 @@ import EventManagerABI from './abis/EventManager.json'
 
 // Contract addresses and their networks
 export const CONTRACT_ADDRESSES = {
-  EVENT_FACTORY: '0xaCe0A97228BBCD36945b8A29196eca4AFe31e9A0', // Deployed on Somnia Testnet
+  EVENT_FACTORY: '0x70068bC17cb22ad28A2E2df5821d3f4Bf839a800', // Deployed on Somnia Testnet
 } as const
 
 export const CONTRACT_NETWORK = {

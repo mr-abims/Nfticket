@@ -10,7 +10,7 @@ try {
   const configPath = path.join(__dirname, 'app/contracts/config.ts');
   const configContent = fs.readFileSync(configPath, 'utf8');
   
-  if (configContent.includes('0xaCe0A97228BBCD36945b8A29196eca4AFe31e9A0')) {
+  if (configContent.includes('0x70068bC17cb22ad28A2E2df5821d3f4Bf839a800')) {
     console.log('   ✅ EventFactory address configured');
   } else {
     console.log('   ❌ EventFactory address missing');

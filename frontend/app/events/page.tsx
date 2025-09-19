@@ -242,8 +242,47 @@ const useEventData = (eventAddress: `0x${string}`) => {
 }
 
 // Component to render a single blockchain event with real data
-const BlockchainEventCard = ({ eventAddress }: { eventAddress: `0x${string}` }) => {
+const BlockchainEventCard = ({ 
+  eventAddress, 
+  searchQuery, 
+  selectedCategory, 
+  selectedStatus
+}: { 
+  eventAddress: `0x${string}`,
+  searchQuery: string,
+  selectedCategory: string,
+  selectedStatus: string
+}) => {
   const { eventData, isLoading, error } = useEventData(eventAddress)
+
+  // Helper function to determine event status for blockchain events
+  const getEventStatus = (event: Event) => {
+    const now = new Date()
+    const eventDate = new Date(event.date)
+    const isUpcoming = eventDate > now
+    const isLive = event.isActive && !isUpcoming
+    const isPast = !event.isActive || eventDate < now
+
+    if (isLive) return "live"
+    if (isPast) return "past"
+    return "upcoming"
+  }
+
+  // Filter the event based on search criteria
+  const shouldShowEvent = () => {
+    if (!eventData) return false
+    
+    const matchesSearch = searchQuery === "" || 
+      eventData.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      eventData.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      eventData.location.toLowerCase().includes(searchQuery.toLowerCase())
+    
+    const matchesCategory = selectedCategory === "all" || eventData.category === selectedCategory
+    const matchesStatus = selectedStatus === "all" || getEventStatus(eventData) === selectedStatus
+    
+    return matchesSearch && matchesCategory && matchesStatus
+  }
+
 
   if (isLoading) {
     return (
@@ -257,21 +296,12 @@ const BlockchainEventCard = ({ eventAddress }: { eventAddress: `0x${string}` }) 
   }
 
   if (error || !eventData) {
-    return (
-      <div className="bg-white dark:bg-slate-900 rounded-2xl p-6 shadow-lg border border-slate-200 dark:border-slate-700">
-        <div className="text-center py-8">
-          <svg className="w-12 h-12 text-slate-400 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z" />
-          </svg>
-          <p className="text-slate-600 dark:text-slate-300 text-sm">
-            Error loading event
-          </p>
-          <p className="text-slate-500 dark:text-slate-400 text-xs mt-1">
-            {eventAddress.slice(0, 10)}...
-          </p>
-        </div>
-      </div>
-    )
+    return null // Don't render error cards, they'll clutter the search results
+  }
+
+  // Only render the event if it matches the search criteria
+  if (!shouldShowEvent()) {
+    return null
   }
 
   return <EventCard event={eventData} />
@@ -344,7 +374,6 @@ export default function EventsPage() {
     return "upcoming"
   }
 
-  // For blockchain events, we can't filter/sort until data is loaded
   // For mock events, we can filter and sort normally
   const filteredEvents = useBlockchainData ? [] : mockEvents
     .filter(event => {
@@ -368,11 +397,9 @@ export default function EventsPage() {
       }
     })
 
-  // Filter blockchain event addresses based on search (basic filtering by address)
-  const filteredEventAddresses = useBlockchainData && eventAddresses ? 
-    eventAddresses.filter(address => 
-      searchQuery === "" || address.toLowerCase().includes(searchQuery.toLowerCase())
-    ) : []
+  // For blockchain events, we need to filter after the data is loaded
+  // We'll pass the search criteria to the BlockchainEventCard component
+  const filteredEventAddresses = useBlockchainData && eventAddresses ? eventAddresses : []
 
   const isLoading = isLoadingAddresses
 
@@ -561,7 +588,7 @@ export default function EventsPage() {
           <div className="flex items-center space-x-4">
             <p className="text-slate-600 dark:text-slate-300">
               {useBlockchainData 
-                ? `${filteredEventAddresses.length} event${filteredEventAddresses.length !== 1 ? 's' : ''} found`
+                ? `${filteredEventAddresses.length} event${filteredEventAddresses.length !== 1 ? 's' : ''} on blockchain`
                 : `${filteredEvents.length} event${filteredEvents.length !== 1 ? 's' : ''} found`
               }
             </p>
@@ -602,7 +629,13 @@ export default function EventsPage() {
                   /* Blockchain Events Grid */
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                     {filteredEventAddresses.map((eventAddress) => (
-                      <BlockchainEventCard key={eventAddress} eventAddress={eventAddress} />
+                      <BlockchainEventCard 
+                        key={eventAddress} 
+                        eventAddress={eventAddress}
+                        searchQuery={searchQuery}
+                        selectedCategory={selectedCategory}
+                        selectedStatus={selectedStatus}
+                      />
                     ))}
                   </div>
                 ) : !useBlockchainData && filteredEvents.length > 0 ? (
