@@ -244,7 +244,7 @@ export default function EventDetailPage() {
   if (isLoadingEvent) {
     return (
       <ErrorBoundary>
-        <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-800">
+        <div className="min-h-screen" style={{ backgroundColor: '#010612' }}>
           <Header />
           <LoadingSpinner message="Loading event details..." />
           <Footer />
@@ -255,7 +255,7 @@ export default function EventDetailPage() {
 
   return (
     <ErrorBoundary>
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-800">
+      <div className="min-h-screen" style={{ backgroundColor: '#010612' }}>
         <Header />
         
         <main className="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
@@ -341,9 +341,58 @@ export default function EventDetailPage() {
 
             {/* Event Details */}
             <div className="bg-white dark:bg-slate-900 rounded-2xl p-8 shadow-lg border border-slate-200 dark:border-slate-700">
-              <h1 className="text-3xl sm:text-4xl font-bold text-slate-900 dark:text-white mb-6">
-                {displayEvent.title}
-              </h1>
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6">
+                <h1 className="text-3xl sm:text-4xl font-bold text-slate-900 dark:text-white mb-4 sm:mb-0">
+                  {displayEvent.title}
+                </h1>
+                {(() => {
+                  const now = new Date()
+                  const eventDate = new Date(displayEvent.date)
+                  const isUpcoming = eventDate > now
+                  const isLive = displayEvent.isActive && !isUpcoming
+                  const isPast = !displayEvent.isActive || eventDate < now
+
+                  let statusInfo
+                  if (isLive) {
+                    statusInfo = {
+                      status: "Live Now",
+                      color: "bg-green-500 text-white",
+                      icon: (
+                        <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                          <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                        </svg>
+                      )
+                    }
+                  } else if (isPast) {
+                    statusInfo = {
+                      status: "Event Ended",
+                      color: "bg-slate-500 text-white",
+                      icon: (
+                        <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                          <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+                        </svg>
+                      )
+                    }
+                  } else {
+                    statusInfo = {
+                      status: "Upcoming",
+                      color: "bg-blue-500 text-white",
+                      icon: (
+                        <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                          <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clipRule="evenodd" />
+                        </svg>
+                      )
+                    }
+                  }
+
+                  return (
+                    <div className={`${statusInfo.color} px-4 py-2 rounded-full text-sm font-medium flex items-center space-x-2`}>
+                      {statusInfo.icon}
+                      <span>{statusInfo.status}</span>
+                    </div>
+                  )
+                })()}
+              </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-8">
                 <div className="flex items-center text-slate-600 dark:text-slate-300">

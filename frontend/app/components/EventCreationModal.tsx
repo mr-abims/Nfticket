@@ -24,7 +24,6 @@ export interface EventCreationModalProps {
 }
 
 const getExplorerUrl = (txHash: string) => {
-  // Somnia Testnet explorer URL
   return `https://somnia-testnet.socialscan.io/tx/${txHash}`
 }
 

@@ -1,6 +1,5 @@
 import Link from "next/link"
 
-// Simplified preview data for homepage demonstration
 const previewFeatures = [
   {
     id: "blockchain-tickets",

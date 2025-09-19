@@ -13,8 +13,6 @@ interface PinataError {
   details?: string
 }
 
-// Note: In production, you should use environment variables for these keys
-// For now, we'll use placeholder values that you can replace
 const PINATA_API_KEY = process.env.NEXT_PUBLIC_PINATA_API_KEY || 'your_pinata_api_key'
 const PINATA_SECRET_KEY = process.env.NEXT_PUBLIC_PINATA_SECRET_KEY || 'your_pinata_secret_key'
 

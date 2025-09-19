@@ -9,7 +9,7 @@ export const NetworkCheck = () => {
   const correctNetwork = getCurrentNetwork()
 
   if (isOnCorrectNetwork(chainId)) {
-    return null // Don't show anything if on correct network
+    return null 
   }
 
   const handleSwitchNetwork = () => {

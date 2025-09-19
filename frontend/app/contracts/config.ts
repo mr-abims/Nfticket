@@ -6,9 +6,8 @@ export const CONTRACT_ADDRESSES = {
   EVENT_FACTORY: '0xaCe0A97228BBCD36945b8A29196eca4AFe31e9A0', // Deployed on Somnia Testnet
 } as const
 
-// Network configuration - Specify which network your contracts are deployed on
 export const CONTRACT_NETWORK = {
-  chainId: 50312, // Somnia testnet chain ID
+  chainId: 50312, 
   name: 'Somnia Testnet',
   nativeCurrency: {
     name: 'Somnia Test Token',

@@ -163,8 +163,7 @@ export const useGetEventCreatedLogs = (userAddress?: `0x${string}`) => {
     blockNumber?: number;
   }>>([])
   
-  // This would need to be implemented with event logs fetching
-  // For now, return empty array but with proper structure
+ 
   useEffect(() => {
     if (userAddress && areContractsConfigured() && isOnCorrectNetwork(chainId)) {
       // TODO: Implement event log fetching
